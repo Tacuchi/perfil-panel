@@ -1,85 +1,78 @@
-<mat-toolbar>Perfil · Oferta</mat-toolbar>
 @if (store.ocupado()) {
   <mat-progress-bar mode="indeterminate" />
 }
 
-<main>
-  <a routerLink="/ofertas" class="volver">← Volver a las ofertas</a>
+<article class="detalle">
+  <a mat-button routerLink="/ofertas" class="volver"><mat-icon fontIcon="arrow_back" />Volver a las ofertas</a>
 
   @if (store.detalle(); as detalle) {
-    <mat-card appearance="outlined">
-      <mat-card-header>
-        <mat-card-title>{{ detalle.oferta.titulo }}</mat-card-title>
-        <mat-card-subtitle>
-          {{ detalle.oferta.empresa ?? 'Empresa no informada' }} · {{ detalle.oferta.fuenteNombre }} ·
-          {{ detalle.oferta.fecha | date: 'd/M/yyyy' }} · {{ modalidad(detalle.oferta.modalidad) }}@if (detalle.oferta.ubicacion) {, {{ detalle.oferta.ubicacion }}}
-        </mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-chip-set>
-          <mat-chip>Encaje: {{ encaje(detalle.oferta.encaje) }}</mat-chip>
-          <mat-chip class="estado">{{ estado(detalle.oferta.estado) }}</mat-chip>
-          @if (!detalle.oferta.publicada) {
-            <mat-chip>Ya no publicada</mat-chip>
-          }
-        </mat-chip-set>
-        @if (detalle.oferta.postuladaEn) {
-          <p class="postulada">Postulada el {{ detalle.oferta.postuladaEn | date: 'd/M/yyyy' }}</p>
-        }
-        <ul class="motivos">
-          @for (motivo of detalle.oferta.motivos; track motivo) {
-            <li>{{ motivo }}</li>
-          }
-        </ul>
-        @if (detalle.oferta.posiblesRepetidas.length > 0) {
-          <p>
-            Posible repetida, también en:
-            @for (otra of detalle.oferta.posiblesRepetidas; track otra.id; let ultima = $last) {
-              <a [routerLink]="['/ofertas', otra.id]">{{ otra.fuenteNombre }}</a>@if (!ultima) {, }
-            }
-          </p>
-        }
-      </mat-card-content>
-      <mat-card-actions class="acciones">
-        @for (marca of marcas; track marca.estado) {
-          <button
-            mat-stroked-button
-            type="button"
-            [attr.data-estado]="marca.estado"
-            [disabled]="store.ocupado() || detalle.oferta.estado === marca.estado"
-            (click)="store.marcar(marca.estado)"
-          >
-            {{ marca.texto }}
-          </button>
-        }
-      </mat-card-actions>
-    </mat-card>
+    <header>
+      <h2>{{ detalle.oferta.titulo }}</h2>
+      <p class="meta">
+        {{ detalle.oferta.empresa ?? 'Empresa no informada' }} · {{ detalle.oferta.fuenteNombre }} ·
+        {{ detalle.oferta.fecha | date: 'd/M/yyyy' }} · {{ modalidad(detalle.oferta.modalidad) }}@if (detalle.oferta.ubicacion) {, {{ detalle.oferta.ubicacion }}}
+      </p>
+    </header>
 
-    <mat-card appearance="outlined">
-      <mat-card-header>
-        <mat-card-title>Postular</mat-card-title>
-        <mat-card-subtitle>El panel no postula ni escribe por ti.</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content class="postular">
+    <div class="etiquetas">
+      <span class="etiqueta" [attr.data-encaje]="detalle.oferta.encaje">Encaje: {{ encaje(detalle.oferta.encaje) }}</span>
+      <span class="etiqueta estado">{{ estado(detalle.oferta.estado) }}</span>
+      @if (!detalle.oferta.publicada) {
+        <span class="etiqueta">Ya no publicada</span>
+      }
+    </div>
+    @if (detalle.oferta.postuladaEn) {
+      <p class="postulada">Postulada el {{ detalle.oferta.postuladaEn | date: 'd/M/yyyy' }}</p>
+    }
+    <ul class="motivos">
+      @for (motivo of detalle.oferta.motivos; track motivo) {
+        <li>{{ motivo }}</li>
+      }
+    </ul>
+    @if (detalle.oferta.posiblesRepetidas.length > 0) {
+      <p class="repetida">
+        Posible repetida, también en:
+        @for (otra of detalle.oferta.posiblesRepetidas; track otra.id; let ultima = $last) {
+          <a [routerLink]="['/ofertas', otra.id]">{{ otra.fuenteNombre }}</a>@if (!ultima) {, }
+        }
+      </p>
+    }
+
+    <div class="acciones" role="group" aria-label="Marcar la oferta">
+      @for (marca of marcas; track marca.estado) {
+        <button
+          mat-stroked-button
+          type="button"
+          [attr.data-estado]="marca.estado"
+          [disabled]="store.ocupado() || detalle.oferta.estado === marca.estado"
+          (click)="store.marcar(marca.estado)"
+        >
+          <mat-icon [fontIcon]="marca.icono" />{{ marca.texto }}
+        </button>
+      }
+    </div>
+
+    <section class="postular" aria-labelledby="titulo-postular">
+      <h3 id="titulo-postular">Postular</h3>
+      <p class="ayuda">El panel no postula ni escribe por ti.</p>
+      <div class="botones">
         <a mat-flat-button class="original" [href]="detalle.oferta.url" target="_blank" rel="noopener noreferrer"
-          >Abrir la publicación en {{ detalle.oferta.fuenteNombre }}</a
+          ><mat-icon fontIcon="open_in_new" />Abrir la publicación en {{ detalle.oferta.fuenteNombre }}</a
         >
         @if (correo(); as enlace) {
-          <p class="contacto">Contacto: <span class="correo">{{ detalle.correoContacto }}</span></p>
-          <a mat-stroked-button class="escribir" [href]="enlace">Escribir correo con el enlace al CV</a>
-        } @else {
-          <p class="contacto">La oferta no trae un correo de contacto: postula desde la publicación.</p>
+          <a matButton="tonal" class="escribir" [href]="enlace"><mat-icon fontIcon="mail" />Escribir correo con el enlace al CV</a>
         }
-      </mat-card-content>
-    </mat-card>
+      </div>
+      @if (correo()) {
+        <p class="contacto">Contacto: <span class="correo">{{ detalle.correoContacto }}</span></p>
+      } @else {
+        <p class="contacto">La oferta no trae un correo de contacto: postula desde la publicación.</p>
+      }
+    </section>
 
-    <mat-card appearance="outlined">
-      <mat-card-header>
-        <mat-card-title>Texto de la oferta</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <p class="descripcion">{{ detalle.descripcion }}</p>
-      </mat-card-content>
-    </mat-card>
+    <section class="texto" aria-labelledby="titulo-texto">
+      <h3 id="titulo-texto">Texto de la oferta</h3>
+      <p class="descripcion">{{ detalle.descripcion }}</p>
+    </section>
   }
-</main>
+</article>

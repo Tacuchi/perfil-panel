@@ -11,6 +11,9 @@ describe('OfertasPageComponent', () => {
   let http: HttpTestingController;
 
   beforeEach(async () => {
+    // El rango por defecto son los últimos 7 días: se fija «hoy» para que la URL esperada no dependa del reloj.
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date(2026, 10, 15, 10, 0));
     await TestBed.configureTestingModule({
       imports: [OfertasPageComponent],
       providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
@@ -21,6 +24,7 @@ describe('OfertasPageComponent', () => {
   });
 
   afterEach(() => {
+    vi.useRealTimers();
     http.verify();
     document.querySelectorAll('.cdk-overlay-container').forEach((nodo) => (nodo.innerHTML = ''));
   });
@@ -56,9 +60,9 @@ describe('OfertasPageComponent', () => {
     return pedido.request.url;
   }
 
-  it('pide por defecto las nuevas de encaje alto y medio', async () => {
+  it('pide por defecto las nuevas de encaje alto y medio de los últimos 7 días', async () => {
     const url = await responderInicio([]);
-    expect(url).toBe('/api/ofertas?encaje=ALTO,MEDIO&estado=NUEVA');
+    expect(url).toBe('/api/ofertas?encaje=ALTO,MEDIO&estado=NUEVA&desde=2026-11-08&hasta=2026-11-15');
     expect(pantalla().textContent).toContain('No hay ofertas con estos filtros.');
   });
 
@@ -97,7 +101,7 @@ describe('OfertasPageComponent', () => {
   it('las que no encajan se ven al cambiar el filtro de encaje', async () => {
     await responderInicio([]);
     const url = await filtrarYAplicar({ encaje: ['NO_ENCAJA'] });
-    expect(url).toBe('/api/ofertas?encaje=NO_ENCAJA&estado=NUEVA');
+    expect(url).toBe('/api/ofertas?encaje=NO_ENCAJA&estado=NUEVA&desde=2026-11-08&hasta=2026-11-15');
   });
 
   it('filtra por estado, fuente, modalidad, tecnología y fechas', async () => {
@@ -124,7 +128,31 @@ describe('OfertasPageComponent', () => {
     (pantalla().querySelector('button[type=button]') as HTMLButtonElement).click();
     const pedido = pedidoDeLista();
     pedido.flush([]);
+    expect(pedido.request.url).toBe('/api/ofertas?encaje=ALTO,MEDIO&estado=NUEVA&desde=2026-11-08&hasta=2026-11-15');
+  });
+
+  it('muestra lo aplicado como chips y cada chip quita su filtro', async () => {
+    await responderInicio([]);
+    const chips = () => [...pantalla().querySelectorAll('.aplicados mat-chip')].map((c) => c.textContent?.trim());
+    expect(chips()).toEqual(['Encaje: Alto', 'Encaje: Medio', 'Estado: Nueva', '8/11/2026 – 15/11/2026']);
+
+    (pantalla().querySelector('button[aria-label="Quitar 8/11/2026 – 15/11/2026"]') as HTMLButtonElement).click();
+    const pedido = pedidoDeLista();
+    pedido.flush([]);
+    await estable();
     expect(pedido.request.url).toBe('/api/ofertas?encaje=ALTO,MEDIO&estado=NUEVA');
+    expect(chips()).toEqual(['Encaje: Alto', 'Encaje: Medio', 'Estado: Nueva']);
+    expect(fixture.componentInstance['filtros'].getRawValue().desde).toBeNull();
+  });
+
+  it('quitar todos deja la lista sin filtros', async () => {
+    await responderInicio([]);
+    (pantalla().querySelector('.quitar-todos') as HTMLButtonElement).click();
+    const pedido = pedidoDeLista();
+    pedido.flush([]);
+    await estable();
+    expect(pedido.request.url).toBe('/api/ofertas');
+    expect(pantalla().querySelector('.aplicados')).toBeNull();
   });
 
   it('una fuente bloqueada se ve como bloqueada con su última lectura correcta, no como día sin ofertas', async () => {

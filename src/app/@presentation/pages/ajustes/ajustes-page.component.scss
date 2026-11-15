@@ -1,0 +1,76 @@
+.pagina {
+  display: grid;
+  gap: 16px;
+  max-width: 840px;
+}
+
+// El título de la tarjeta es un h2 de la página: hereda el estilo del título de la tarjeta.
+h2 {
+  margin: 0;
+  font: inherit;
+}
+
+mat-card-content {
+  padding-top: 16px;
+}
+
+.paletas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+  gap: 12px;
+}
+
+// Opción de paleta: tarjeta con borde; la elegida pasa a secondary-container con borde primary.
+.paleta {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 16px 8px 12px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-medium);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-label-large);
+  cursor: pointer;
+  transition: background-color var(--md-motion-standard);
+
+  &:hover {
+    background: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+  }
+
+  &:has(input:checked) {
+    border-color: var(--mat-sys-primary);
+    background: var(--mat-sys-secondary-container);
+    color: var(--mat-sys-on-secondary-container);
+  }
+
+  &:has(input:focus-visible) {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
+}
+
+// Muestra al estilo de Android: mitad superior primary, abajo secondary y tertiary.
+.muestra {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--mat-sys-corner-full);
+  background: conic-gradient(
+    from 90deg,
+    var(--mat-sys-secondary) 0 25%,
+    var(--mat-sys-tertiary) 25% 50%,
+    var(--mat-sys-primary) 50% 100%
+  );
+
+  mat-icon {
+    padding: 4px;
+    border-radius: var(--mat-sys-corner-full);
+    background: var(--mat-sys-primary-container);
+    color: var(--mat-sys-on-primary-container);
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}

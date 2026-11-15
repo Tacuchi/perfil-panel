@@ -1,4 +1,4 @@
-import { Encaje, EstadoLectura, EstadoOferta, Fuente, Modalidad } from '../@data/interfaces/oferta';
+import { Encaje, EstadoLectura, EstadoOferta, Fuente, IFiltroOfertas, Modalidad } from '../@data/interfaces/oferta';
 
 export const MSG_CARGA_ACEPTADA = 'CV subido. Ya es el vigente.';
 export const MSG_VIGENTE_CAMBIADA = 'Versión restaurada. Ya es la vigente.';
@@ -45,16 +45,28 @@ export const ESTADOS_LECTURA: Readonly<Record<EstadoLectura, string>> = {
   SIN_LEER: 'Sin leer todavía',
 };
 
-/** Lista por defecto: nuevas de encaje alto y medio. */
-export const FILTRO_POR_DEFECTO = {
-  encaje: ['ALTO', 'MEDIO'] as Encaje[],
-  estado: ['NUEVA'] as EstadoOferta[],
-  fuente: [] as Fuente[],
-  modalidad: [] as Modalidad[],
-  tecnologia: null as string | null,
-  desde: null as string | null,
-  hasta: null as string | null,
-};
+/** Días hacia atrás que cubre el rango de fechas por defecto. */
+export const DIAS_POR_DEFECTO = 7;
+
+/** Fecha local en el formato del campo de fecha y de la API (yyyy-MM-dd). */
+export function fechaIso(fecha: Date): string {
+  const dos = (n: number) => String(n).padStart(2, '0');
+  return `${fecha.getFullYear()}-${dos(fecha.getMonth() + 1)}-${dos(fecha.getDate())}`;
+}
+
+/** Lista por defecto: nuevas de encaje alto y medio de los últimos 7 días. */
+export function filtroPorDefecto(hoy = new Date()): IFiltroOfertas {
+  const desde = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - DIAS_POR_DEFECTO);
+  return {
+    encaje: ['ALTO', 'MEDIO'],
+    estado: ['NUEVA'],
+    fuente: [],
+    modalidad: [],
+    tecnologia: null,
+    desde: fechaIso(desde),
+    hasta: fechaIso(hoy),
+  };
+}
 
 /** Etiqueta visible de un valor de catálogo. */
 export function etiqueta(catalogo: readonly { valor: string; etiqueta: string }[], valor: string): string {

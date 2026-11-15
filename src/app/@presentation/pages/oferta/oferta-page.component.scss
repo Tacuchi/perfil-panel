@@ -1,35 +1,72 @@
-main {
+:host {
+  display: block;
+}
+
+.detalle {
   display: grid;
   gap: 16px;
-  max-width: 880px;
-  margin: 16px auto;
-  padding: 0 16px;
+  padding: 8px 24px 24px;
+}
+
+.volver {
+  justify-self: start;
+  margin-left: -12px;
+}
+
+h2 {
+  font: var(--mat-sys-headline-small);
+}
+
+h3 {
+  font: var(--mat-sys-title-medium);
+}
+
+.meta,
+.ayuda,
+.contacto {
+  margin: 4px 0 0;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.etiquetas,
+.acciones,
+.botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.postulada,
+.repetida {
+  margin: 0;
 }
 
 .motivos {
-  margin: 8px 0 0;
+  margin: 0;
   padding-left: 20px;
   color: var(--mat-sys-on-surface-variant);
 }
 
-.acciones {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 0 16px 12px;
-}
-
+// Tarjeta rellena de M3: surface-container-highest, esquinas medium.
 .postular {
   display: grid;
-  gap: 12px;
-  justify-items: start;
+  gap: 8px;
+  padding: 16px;
+  border-radius: var(--mat-sys-corner-medium);
+  background: var(--mat-sys-surface-container-highest);
+
+  .ayuda {
+    margin: 0 0 4px;
+  }
 }
 
-.contacto {
-  margin: 0;
+.correo {
+  color: var(--mat-sys-on-surface);
+  overflow-wrap: anywhere;
 }
 
 .descripcion {
+  max-width: 70ch;
+  margin: 8px 0 0;
   white-space: pre-line;
-  margin: 0;
 }

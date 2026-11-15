@@ -3,6 +3,7 @@ import { Observable, finalize, tap } from 'rxjs';
 import { EstadoOferta, IOfertaDetalle } from '../../../@data/interfaces/oferta';
 import { OfertasService } from '../../../@data/services/ofertas.service';
 import { ToastService } from '../../../@data/services/toast.service';
+import { OfertasStore } from '../ofertas/ofertas.store';
 import { ESTADOS_OFERTA, MSG_ESTADO_CAMBIADO, etiqueta } from '../../../Utils/const';
 
 interface OfertaState {
@@ -15,6 +16,7 @@ interface OfertaState {
 export class OfertaStore {
   private readonly servicio = inject(OfertasService);
   private readonly toast = inject(ToastService);
+  private readonly lista = inject(OfertasStore);
 
   private readonly state = signal<OfertaState>({ detalle: null, ocupado: false });
 
@@ -34,6 +36,7 @@ export class OfertaStore {
       this.servicio.marcar(actual.oferta.id, estado).pipe(
         tap((detalle) => {
           this.state.update((s) => ({ ...s, detalle }));
+          this.lista.reemplazar(detalle.oferta);
           this.toast.exito(`${MSG_ESTADO_CAMBIADO} ${etiqueta(ESTADOS_OFERTA, estado).toLowerCase()}.`);
         }),
       ),

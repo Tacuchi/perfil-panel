@@ -1,34 +1,35 @@
-<mat-toolbar>Perfil · CV</mat-toolbar>
 @if (store.ocupado()) {
   <mat-progress-bar mode="indeterminate" />
 }
 
-<main>
+<div class="pagina">
   <mat-card appearance="outlined">
     <mat-card-header>
-      <mat-card-title>Subir una versión</mat-card-title>
+      <mat-card-title><h2>Subir una versión</h2></mat-card-title>
       <mat-card-subtitle>PDF obligatorio, Word opcional. Máximo 10 MB cada uno.</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
       <form [formGroup]="formulario" (ngSubmit)="subir()">
         <div class="archivo">
           <input #pdf type="file" accept=".pdf,application/pdf" hidden (change)="elegir('pdf', $event)" />
-          <button mat-stroked-button type="button" (click)="pdf.click()">Elegir PDF</button>
+          <button mat-stroked-button type="button" (click)="pdf.click()"><mat-icon fontIcon="picture_as_pdf" />Elegir PDF</button>
           <span class="nombre">{{ formulario.controls.pdf.value?.name ?? 'Ningún PDF elegido' }}</span>
         </div>
         <div class="archivo">
           <input #word type="file" accept=".docx" hidden (change)="elegir('word', $event)" />
-          <button mat-stroked-button type="button" (click)="word.click()">Elegir Word</button>
+          <button mat-stroked-button type="button" (click)="word.click()"><mat-icon fontIcon="article" />Elegir Word</button>
           <span class="nombre">{{ formulario.controls.word.value?.name ?? 'Sin Word' }}</span>
         </div>
-        <button mat-flat-button type="submit" [disabled]="formulario.invalid || store.ocupado()">Subir</button>
+        <button mat-flat-button type="submit" [disabled]="formulario.invalid || store.ocupado()">
+          <mat-icon fontIcon="upload" />Subir
+        </button>
       </form>
     </mat-card-content>
   </mat-card>
 
   <mat-card appearance="outlined">
     <mat-card-header>
-      <mat-card-title>Historial</mat-card-title>
+      <mat-card-title><h2>Historial</h2></mat-card-title>
       <mat-card-subtitle>Hasta 10 versiones. La vigente es la que entrega tacuchi.dev/cv.</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
@@ -43,4 +44,4 @@
       }
     </mat-card-content>
   </mat-card>
-</main>
+</div>

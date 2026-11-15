@@ -3,7 +3,9 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { IOfertaDetalle } from '../../../@data/interfaces/oferta';
-import { detalleDePrueba } from '../ofertas/ofertas-de-prueba';
+import { filtroPorDefecto } from '../../../Utils/const';
+import { detalleDePrueba, ofertaDePrueba } from '../ofertas/ofertas-de-prueba';
+import { OfertasStore } from '../ofertas/ofertas.store';
 import { OfertaPageComponent } from './oferta-page.component';
 
 describe('OfertaPageComponent', () => {
@@ -81,6 +83,19 @@ describe('OfertaPageComponent', () => {
     expect(pantalla().querySelector('.estado')?.textContent).toContain('Descartada');
     expect((pantalla().querySelector('button[data-estado="DESCARTADA"]') as HTMLButtonElement).disabled).toBe(true);
     expect(aviso()).toContain('Oferta marcada como descartada.');
+  });
+
+  it('la lista que se ve al lado refleja la oferta marcada', async () => {
+    const lista = TestBed.inject(OfertasStore);
+    lista.aplicar(filtroPorDefecto());
+    http.expectOne((r) => r.url.startsWith('/api/ofertas?')).flush([ofertaDePrueba(), ofertaDePrueba({ id: 2 })]);
+    await responder(detalleDePrueba());
+
+    (pantalla().querySelector('button[data-estado="DESCARTADA"]') as HTMLButtonElement).click();
+    http.expectOne({ method: 'PATCH', url: '/api/ofertas/1' }).flush(detalleDePrueba({ estado: 'DESCARTADA' }));
+    await estable();
+
+    expect(lista.ofertas().map((o) => [o.id, o.estado])).toEqual([[1, 'DESCARTADA'], [2, 'NUEVA']]);
   });
 
   it('la postulada muestra la fecha en que se marcó', async () => {

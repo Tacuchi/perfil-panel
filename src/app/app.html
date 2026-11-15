@@ -1,0 +1,56 @@
+<div class="estructura" [attr.data-navegacion]="navegacion()">
+  @if (navegacion() === 'menu') {
+    <!-- Cajón de navegación estándar de M3. Diferido: la lista de Material no entra en la carga inicial. -->
+    @defer (on immediate) {
+    <aside class="cajon">
+      <p class="encabezado-cajon">Perfil</p>
+      <nav aria-label="Módulos del panel">
+        <mat-nav-list>
+          @for (modulo of modulos; track modulo.ruta) {
+            <a mat-list-item [routerLink]="modulo.ruta" routerLinkActive #enlace="routerLinkActive"
+              [activated]="enlace.isActive" [attr.aria-current]="enlace.isActive ? 'page' : null">
+              <mat-icon matListItemIcon [fontIcon]="modulo.icono" [class.relleno]="enlace.isActive" />
+              <span matListItemTitle>{{ modulo.texto }}</span>
+            </a>
+          }
+        </mat-nav-list>
+      </nav>
+    </aside>
+    } @placeholder {
+      <aside class="cajon"></aside>
+    }
+  } @else if (navegacion() === 'riel') {
+    <!-- Riel de navegación de M3: Angular Material no lo trae, se arma según la especificación. -->
+    <aside class="riel">
+      <nav aria-label="Módulos del panel">
+        @for (modulo of modulos; track modulo.ruta) {
+          <a [routerLink]="modulo.ruta" routerLinkActive="activo" #enlace="routerLinkActive"
+            [attr.aria-current]="enlace.isActive ? 'page' : null">
+            <span class="indicador" matRipple><mat-icon [fontIcon]="modulo.icono" /></span>
+            <span class="texto">{{ modulo.texto }}</span>
+          </a>
+        }
+      </nav>
+    </aside>
+  }
+
+  <div class="contenido">
+    <mat-toolbar class="barra-superior" [class.desplazada]="desplazada()">
+      <h1>{{ seccion() }}</h1>
+    </mat-toolbar>
+    <main><router-outlet /></main>
+  </div>
+
+  @if (navegacion() === 'barra') {
+    <!-- Barra de navegación de M3 para teléfono. -->
+    <nav class="barra-inferior" aria-label="Módulos del panel">
+      @for (modulo of modulos; track modulo.ruta) {
+        <a [routerLink]="modulo.ruta" routerLinkActive="activo" #enlace="routerLinkActive"
+          [attr.aria-current]="enlace.isActive ? 'page' : null">
+          <span class="indicador" matRipple><mat-icon [fontIcon]="modulo.icono" /></span>
+          <span class="texto">{{ modulo.texto }}</span>
+        </a>
+      }
+    </nav>
+  }
+</div>

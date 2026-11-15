@@ -27,8 +27,8 @@ describe('App', () => {
     await app.whenStable();
 
     const enlaces = Array.from((app.nativeElement as HTMLElement).querySelectorAll('nav a'));
-    expect(enlaces.map((a) => a.textContent?.trim())).toEqual(['CV', 'Ofertas']);
-    expect(enlaces.map((a) => a.getAttribute('href'))).toEqual(['/cv', '/ofertas']);
+    expect(enlaces.map((a) => a.textContent?.trim())).toEqual(['CV', 'Ofertas', 'Ajustes']);
+    expect(enlaces.map((a) => a.getAttribute('href'))).toEqual(['/cv', '/ofertas', '/ajustes']);
     expect(TestBed.inject(Router).url).toBe('/cv');
     expect(app.nativeElement.textContent).toContain('Subir una versión');
 

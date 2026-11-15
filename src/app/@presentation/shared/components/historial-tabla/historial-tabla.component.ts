@@ -1,14 +1,13 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatTableModule } from '@angular/material/table';
 import { IVersion } from '../../../../@data/interfaces/version';
 
 /** Lista de versiones: descarga y restauración. No llama a la API; avisa a la página. */
 @Component({
   selector: 'app-historial-tabla',
-  imports: [DatePipe, MatTableModule, MatButtonModule, MatChipsModule],
+  imports: [DatePipe, MatTableModule, MatButtonModule],
   templateUrl: './historial-tabla.component.html',
   styleUrl: './historial-tabla.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

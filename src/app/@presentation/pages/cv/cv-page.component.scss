@@ -1,9 +1,30 @@
-main {
+:host {
+  display: block;
+  container-type: inline-size;
+}
+
+.pagina {
   display: grid;
   gap: 16px;
-  max-width: 880px;
-  margin: 16px auto;
-  padding: 0 16px;
+  align-items: start;
+}
+
+// Ancho: subir a un tercio y el historial a dos tercios, como la lista y el detalle de Ofertas.
+@container (width >= 840px) {
+  .pagina {
+    grid-template-columns: minmax(320px, 1fr) minmax(0, 2fr);
+    gap: 24px;
+  }
+}
+
+// El título de la tarjeta es un h2 de la página: hereda el estilo del título de la tarjeta.
+h2 {
+  margin: 0;
+  font: inherit;
+}
+
+mat-card-content {
+  padding-top: 16px;
 }
 
 form {
@@ -14,10 +35,12 @@ form {
 
 .archivo {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 8px 12px;
 }
 
 .nombre {
   color: var(--mat-sys-on-surface-variant);
+  overflow-wrap: anywhere;
 }

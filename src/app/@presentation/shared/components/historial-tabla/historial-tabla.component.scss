@@ -5,3 +5,12 @@
 table {
   width: 100%;
 }
+
+.marca-vigente {
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+}
+
+td {
+  font-variant-numeric: tabular-nums;
+}

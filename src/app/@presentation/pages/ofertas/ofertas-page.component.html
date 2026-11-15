@@ -1,94 +1,127 @@
-<mat-toolbar>Perfil · Ofertas</mat-toolbar>
 @if (store.ocupado()) {
-  <mat-progress-bar mode="indeterminate" />
+  <mat-progress-bar mode="indeterminate" class="progreso" />
 }
 
-<main>
-  <mat-card appearance="outlined">
-    <mat-card-header>
-      <mat-card-title>Fuentes</mat-card-title>
-      <mat-card-subtitle>Se leen una vez al día. Una fuente que falla o bloquea no cuenta como día sin ofertas.</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
+<div class="ofertas" [class.con-detalle]="detalleAbierto()">
+  <div class="cabecera">
+    <section class="fuentes" aria-labelledby="titulo-fuentes">
+      <div class="fuentes-titulo">
+        <h2 id="titulo-fuentes">Fuentes</h2>
+        <p class="ayuda">Se leen una vez al día. Una fuente que falla o bloquea no cuenta como día sin ofertas.</p>
+      </div>
       <app-fuentes-estado [fuentes]="store.fuentes()" />
-    </mat-card-content>
-  </mat-card>
+    </section>
 
-  <mat-card appearance="outlined">
-    <mat-card-header>
-      <mat-card-title>Filtros</mat-card-title>
-      <mat-card-subtitle>Por defecto: nuevas de encaje alto y medio.</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <form class="filtros" [formGroup]="filtros" (ngSubmit)="aplicar()">
-        <mat-form-field>
-          <mat-label>Encaje</mat-label>
-          <mat-select formControlName="encaje" multiple>
-            @for (opcion of encajes; track opcion.valor) {
-              <mat-option [value]="opcion.valor">{{ opcion.etiqueta }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Estado</mat-label>
-          <mat-select formControlName="estado" multiple>
-            @for (opcion of estados; track opcion.valor) {
-              <mat-option [value]="opcion.valor">{{ opcion.etiqueta }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Fuente</mat-label>
-          <mat-select formControlName="fuente" multiple>
-            @for (opcion of fuentesCatalogo; track opcion.valor) {
-              <mat-option [value]="opcion.valor">{{ opcion.etiqueta }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Modalidad</mat-label>
-          <mat-select formControlName="modalidad" multiple>
-            @for (opcion of modalidades; track opcion.valor) {
-              <mat-option [value]="opcion.valor">{{ opcion.etiqueta }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Tecnología</mat-label>
-          <mat-select formControlName="tecnologia">
-            <mat-option [value]="null">Todas</mat-option>
-            @for (nombre of store.tecnologias().principales; track nombre) {
-              <mat-option [value]="nombre">{{ nombre }}</mat-option>
-            }
-            @for (nombre of store.tecnologias().secundarias; track nombre) {
-              <mat-option [value]="nombre">{{ nombre }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Desde</mat-label>
-          <input matInput type="date" formControlName="desde" />
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Hasta</mat-label>
-          <input matInput type="date" formControlName="hasta" />
-        </mat-form-field>
+    <!-- En el teléfono los filtros empiezan plegados para que la lista se vea primero. -->
+    <details class="plegable" [open]="!telefono()">
+      <summary><mat-icon fontIcon="tune" />Filtros</summary>
+      <form class="filtros filtros-compactos" [formGroup]="filtros" (ngSubmit)="aplicar()" aria-label="Filtros">
+        <div class="campos">
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>Encaje</mat-label>
+            <mat-select formControlName="encaje" multiple>
+              @for (opcion of encajes; track opcion.valor) {
+                <mat-option [value]="opcion.valor">{{ opcion.etiqueta }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>Estado</mat-label>
+            <mat-select formControlName="estado" multiple>
+              @for (opcion of estados; track opcion.valor) {
+                <mat-option [value]="opcion.valor">{{ opcion.etiqueta }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>Fuente</mat-label>
+            <mat-select formControlName="fuente" multiple>
+              @for (opcion of fuentesCatalogo; track opcion.valor) {
+                <mat-option [value]="opcion.valor">{{ opcion.etiqueta }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>Modalidad</mat-label>
+            <mat-select formControlName="modalidad" multiple>
+              @for (opcion of modalidades; track opcion.valor) {
+                <mat-option [value]="opcion.valor">{{ opcion.etiqueta }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>Tecnología</mat-label>
+            <mat-select formControlName="tecnologia">
+              <mat-option [value]="null">Todas</mat-option>
+              @for (nombre of store.tecnologias().principales; track nombre) {
+                <mat-option [value]="nombre">{{ nombre }}</mat-option>
+              }
+              @for (nombre of store.tecnologias().secundarias; track nombre) {
+                <mat-option [value]="nombre">{{ nombre }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>Desde</mat-label>
+            <input matInput type="date" formControlName="desde" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>Hasta</mat-label>
+            <input matInput type="date" formControlName="hasta" />
+          </mat-form-field>
+        </div>
         <div class="acciones">
           <button mat-flat-button type="submit" [disabled]="store.ocupado()">Aplicar</button>
-          <button mat-stroked-button type="button" (click)="restablecer()" [disabled]="store.ocupado()">
+          <button mat-button type="button" (click)="restablecer()" [disabled]="store.ocupado()"
+            matTooltip="Por defecto: nuevas de encaje alto y medio de los últimos 7 días">
             Restablecer
           </button>
         </div>
       </form>
-    </mat-card-content>
-  </mat-card>
+    </details>
 
-  @if (store.cargado()) {
-    <p class="total">{{ store.ofertas().length }} ofertas</p>
-    @for (oferta of store.ofertas(); track oferta.id) {
-      <app-oferta-tarjeta [oferta]="oferta" />
-    } @empty {
-      <p class="vacio">No hay ofertas con estos filtros.</p>
+    <!-- Lo que filtra la lista ahora; cada chip quita su filtro y vuelve a buscar. -->
+    @if (aplicados().length) {
+      <div class="aplicados">
+        <mat-chip-set aria-label="Filtros aplicados">
+          @for (chip of aplicados(); track chip.clave + (chip.valor ?? '')) {
+            <mat-chip (removed)="quitar(chip)" [disabled]="store.ocupado()">
+              {{ chip.texto }}
+              <button matChipRemove [attr.aria-label]="'Quitar ' + chip.texto">
+                <mat-icon fontIcon="close" />
+              </button>
+            </mat-chip>
+          }
+        </mat-chip-set>
+        @if (aplicados().length > 1) {
+          <button mat-button type="button" class="quitar-todos" (click)="quitarTodos()" [disabled]="store.ocupado()">
+            Quitar todos
+          </button>
+        }
+      </div>
     }
-  }
-</main>
+  </div>
+
+  <div class="lista-detalle">
+    <section class="lista" aria-label="Ofertas encontradas">
+      @if (store.cargado()) {
+        <p class="total">{{ store.ofertas().length }} ofertas</p>
+        @for (oferta of store.ofertas(); track oferta.id) {
+          <app-oferta-tarjeta [oferta]="oferta" />
+        } @empty {
+          <p class="vacio">No hay ofertas con estos filtros.</p>
+        }
+      }
+    </section>
+
+    <section class="detalle" aria-label="Oferta elegida">
+      <router-outlet (activate)="detalleAbierto.set(true)" (deactivate)="detalleAbierto.set(false)" />
+      @if (!detalleAbierto()) {
+        <div class="sin-eleccion">
+          <mat-icon fontIcon="work_outline" />
+          <p>Elige una oferta de la lista para verla aquí.</p>
+        </div>
+      }
+    </section>
+  </div>
+</div>

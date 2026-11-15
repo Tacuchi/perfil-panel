@@ -1,25 +1,203 @@
-main {
-  display: grid;
-  gap: 16px;
-  max-width: 880px;
-  margin: 16px auto;
-  padding: 0 16px;
+:host {
+  display: block;
+  container-type: inline-size;
 }
 
+// No ocupa alto: así no empuja los paneles cuando aparece.
+.progreso {
+  position: sticky;
+  top: 64px;
+  z-index: 1;
+  margin: 0 -16px -4px;
+  width: auto;
+}
+
+.cabecera {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+// Fuentes: título y una tarjeta indicador por fuente, separados de los filtros.
+.fuentes {
+  display: grid;
+  gap: 12px;
+}
+
+.fuentes-titulo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 16px;
+
+  h2 {
+    font: var(--mat-sys-title-medium);
+  }
+}
+
+.ayuda {
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-small);
+}
+
+.plegable summary {
+  display: none;
+}
+
+// Filtros: los campos llenan la fila a partes iguales y las acciones quedan a la derecha.
 .filtros {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 0 12px;
+  gap: 8px 16px;
+}
+
+.campos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 8px;
+
+  mat-form-field {
+    width: 100%;
+  }
 }
 
 .acciones {
   display: flex;
-  gap: 12px;
+  gap: 4px;
+}
+
+// Chips de entrada (M3) con lo aplicado: se leen de un vistazo y se quitan con un toque.
+.aplicados {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  gap: 8px;
+  margin-top: -4px;
+}
+
+.lista-detalle {
+  display: grid;
+  gap: 12px;
+  align-items: start;
+}
+
+.lista {
+  background: var(--mat-sys-surface-container);
+  border-radius: var(--mat-sys-corner-large);
+  padding: 8px 0;
 }
 
 .total,
 .vacio {
   margin: 0;
+  padding: 8px 16px;
   color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-title-small);
+}
+
+.detalle {
+  display: none;
+}
+
+.sin-eleccion {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 8px;
+  height: 100%;
+  padding: 24px;
+  box-sizing: border-box;
+  color: var(--mat-sys-on-surface-variant);
+  text-align: center;
+
+  // Tamaño de ícono grande de M3 (40dp) para el estado vacío.
+  mat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+// Angosto con una oferta abierta: solo el detalle, como una pantalla propia.
+@container (width < 720px) {
+  .con-detalle {
+    .cabecera,
+    .lista {
+      display: none;
+    }
+
+    .detalle {
+      display: block;
+    }
+  }
+}
+
+// Teléfono: los filtros se pliegan tras su título y van uno por fila.
+@container (width < 568px) {
+  .plegable summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 0 8px;
+    border-radius: var(--mat-sys-corner-full);
+    font: var(--mat-sys-title-small);
+    cursor: pointer;
+  }
+
+  .plegable[open] summary {
+    margin-bottom: 8px;
+  }
+
+  .campos {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Desde 720: acciones en la misma fila que los campos.
+@container (width >= 720px) {
+  .filtros {
+    grid-template-columns: 1fr auto;
+    align-items: start;
+  }
+
+  .acciones {
+    padding-top: 2px;
+  }
+}
+
+// Lista y detalle de M3: dos paneles a un tercio y dos tercios que llenan el alto de la ventana.
+// Cada panel se desplaza por dentro; la página no deja un hueco debajo.
+@container (width >= 720px) {
+  .ofertas {
+    display: flex;
+    flex-direction: column;
+    // 64 de la barra superior + 24 del margen inferior.
+    height: calc(100dvh - 88px);
+    min-height: 560px;
+  }
+
+  .lista-detalle {
+    flex: 1;
+    min-height: 0;
+    grid-template-columns: minmax(320px, 1fr) minmax(0, 2fr);
+    align-items: stretch;
+    gap: 24px;
+  }
+
+  .lista,
+  .detalle {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .detalle {
+    display: block;
+    border-radius: var(--mat-sys-corner-large);
+    background: var(--mat-sys-surface-container-low);
+  }
 }

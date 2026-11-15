@@ -1,41 +1,37 @@
-<mat-card appearance="outlined" class="oferta" [attr.data-encaje]="oferta().encaje">
-  <mat-card-header>
-    <mat-card-title>
-      <a [routerLink]="['/ofertas', oferta().id]">{{ oferta().titulo }}</a>
-    </mat-card-title>
-    <mat-card-subtitle>
-      {{ oferta().empresa ?? 'Empresa no informada' }} · {{ oferta().fuenteNombre }} ·
-      {{ oferta().fecha | date: 'd/M/yyyy' }} · {{ modalidad(oferta().modalidad) }}@if (oferta().ubicacion) {, {{ oferta().ubicacion }}}
-    </mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content>
-    <mat-chip-set>
-      <mat-chip class="encaje">Encaje: {{ encaje(oferta().encaje) }}</mat-chip>
-      <mat-chip class="estado">{{ estado(oferta().estado) }}</mat-chip>
-      @if (!oferta().publicada) {
-        <mat-chip class="retirada">Ya no publicada</mat-chip>
-      }
-      @if (oferta().conCorreo) {
-        <mat-chip class="con-correo">Con correo de contacto</mat-chip>
-      }
-    </mat-chip-set>
-    <ul class="motivos">
-      @for (motivo of oferta().motivos; track motivo) {
-        <li>{{ motivo }}</li>
-      }
-    </ul>
-    @if (oferta().posiblesRepetidas.length > 0) {
-      <p class="repetida">
-        Posible repetida, también en:
-        @for (otra of oferta().posiblesRepetidas; track otra.id; let ultima = $last) {
-          <a [routerLink]="['/ofertas', otra.id]">{{ otra.fuenteNombre }}</a>@if (!ultima) {, }
-        }
-      </p>
-    }
-  </mat-card-content>
-  <mat-card-actions>
-    <a class="original" [href]="oferta().url" target="_blank" rel="noopener noreferrer"
-      >Ver en {{ oferta().fuenteNombre }}</a
+<article class="oferta" [attr.data-encaje]="oferta().encaje">
+  <div class="linea">
+    <a class="titulo" [routerLink]="['/ofertas', oferta().id]" routerLinkActive="elegida">{{ oferta().titulo }}</a>
+    <span class="etiqueta encaje" [attr.data-encaje]="oferta().encaje"
+      ><span class="solo-lector">Encaje: </span>{{ encaje(oferta().encaje) }}</span
     >
-  </mat-card-actions>
-</mat-card>
+  </div>
+  <p class="meta">
+    {{ oferta().empresa ?? 'Empresa no informada' }} · {{ oferta().fuenteNombre }} ·
+    {{ oferta().fecha | date: 'd/M/yyyy' }} · {{ modalidad(oferta().modalidad) }}@if (oferta().ubicacion) {, {{ oferta().ubicacion }}}
+  </p>
+  <ul class="motivos">
+    @for (motivo of oferta().motivos; track motivo) {
+      <li>{{ motivo }}</li>
+    }
+  </ul>
+  <p class="senales">
+    <span class="estado">{{ estado(oferta().estado) }}</span>
+    @if (!oferta().publicada) {
+      <span class="retirada">Ya no publicada</span>
+    }
+    @if (oferta().conCorreo) {
+      <span class="con-correo"><mat-icon fontIcon="mail" />Con correo de contacto</span>
+    }
+  </p>
+  @if (oferta().posiblesRepetidas.length > 0) {
+    <p class="repetida">
+      Posible repetida, también en:
+      @for (otra of oferta().posiblesRepetidas; track otra.id; let ultima = $last) {
+        <a [routerLink]="['/ofertas', otra.id]">{{ otra.fuenteNombre }}</a>@if (!ultima) {, }
+      }
+    </p>
+  }
+  <a class="original" [href]="oferta().url" target="_blank" rel="noopener noreferrer"
+    >Ver en {{ oferta().fuenteNombre }}<mat-icon fontIcon="open_in_new" /></a
+  >
+</article>

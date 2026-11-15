@@ -1,7 +1,8 @@
+// Una tarjeta con borde (M3) por fuente: el estado es el indicador; nombre arriba, fecha y motivo debajo.
 .fuentes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -9,18 +10,83 @@
 
 .fuente {
   display: flex;
-  flex-wrap: wrap;
-  gap: 4px 8px;
-  align-items: baseline;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-medium);
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
 }
 
-.problema .estado {
-  color: var(--mat-sys-error);
-  font-weight: 600;
+.cabeza {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.nombre {
+  font: var(--mat-sys-title-small);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.icono {
+  flex: none;
+  color: var(--mat-sys-on-surface-variant);
+  font-variation-settings: 'FILL' 1;
+}
+
+.estado {
+  font: var(--mat-sys-headline-small);
 }
 
 .fecha,
 .detalle {
+  font: var(--mat-sys-body-small);
   color: var(--mat-sys-on-surface-variant);
-  font-size: 0.875rem;
+}
+
+[data-estado='CORRECTA'] .icono {
+  color: var(--mat-sys-primary);
+}
+
+// Una fuente que falla o bloquea pide atención: tarjeta rellena con el contenedor de error.
+// En oscuro el contenedor de error se mezcla con la superficie para que no encandile.
+.problema {
+  border-color: transparent;
+  background: light-dark(
+    var(--mat-sys-error-container),
+    color-mix(in srgb, var(--mat-sys-error-container) 45%, var(--mat-sys-surface-container))
+  );
+
+  &,
+  .nombre,
+  .icono,
+  .fecha,
+  .detalle {
+    color: var(--mat-sys-on-error-container);
+  }
+}
+
+// Teléfono: tarjetas compactas para que la lista de ofertas siga a la vista.
+@container (width < 568px) {
+  .fuentes {
+    gap: 8px;
+  }
+
+  .fuente {
+    gap: 2px;
+    padding: 12px 16px;
+  }
+
+  .estado {
+    font: var(--mat-sys-title-medium);
+  }
+
+  .icono {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+  }
 }

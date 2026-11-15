@@ -2,7 +2,7 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { Observable, finalize, tap } from 'rxjs';
 import { IFiltroOfertas, IFuente, IOferta, ITecnologias } from '../../../@data/interfaces/oferta';
 import { OfertasService } from '../../../@data/services/ofertas.service';
-import { FILTRO_POR_DEFECTO } from '../../../Utils/const';
+import { filtroPorDefecto } from '../../../Utils/const';
 
 interface OfertasState {
   ofertas: IOferta[];
@@ -25,7 +25,7 @@ export class OfertasStore {
     ofertas: [],
     fuentes: [],
     tecnologias: { principales: [], secundarias: [] },
-    filtro: { ...FILTRO_POR_DEFECTO },
+    filtro: filtroPorDefecto(),
     ocupado: false,
     cargado: false,
   });
@@ -48,6 +48,14 @@ export class OfertasStore {
   aplicar(filtro: IFiltroOfertas): void {
     this.state.update((s) => ({ ...s, filtro }));
     this.buscar();
+  }
+
+  /**
+   * Refleja en la lista una oferta cambiada en el detalle, que ahora convive con ella.
+   * Se queda en la lista aunque ya no cumpla el filtro: desaparece al volver a aplicarlo.
+   */
+  reemplazar(oferta: IOferta): void {
+    this.state.update((s) => ({ ...s, ofertas: s.ofertas.map((o) => (o.id === oferta.id ? oferta : o)) }));
   }
 
   private buscar(): void {

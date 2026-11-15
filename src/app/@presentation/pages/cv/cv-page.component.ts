@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/cor
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { VersionesService } from '../../../@data/services/versiones.service';
 import { HistorialTablaComponent } from '../../shared/components/historial-tabla/historial-tabla.component';
 import { HistorialStore } from './historial.store';
@@ -13,9 +13,9 @@ import { HistorialStore } from './historial.store';
   selector: 'app-cv-page',
   imports: [
     ReactiveFormsModule,
-    MatToolbarModule,
-    MatCardModule,
+    MatIconModule,
     MatButtonModule,
+    MatCardModule,
     MatProgressBarModule,
     HistorialTablaComponent,
   ],

@@ -1,0 +1,41 @@
+<div class="pagina">
+  <mat-card appearance="outlined">
+    <mat-card-header>
+      <mat-card-title><h2 id="titulo-tema">Tema</h2></mat-card-title>
+      <mat-card-subtitle>Claro, oscuro o el que use tu sistema.</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <!-- Botón segmentado de M3. -->
+      <mat-button-toggle-group class="temas" aria-labelledby="titulo-tema" [value]="tema.actual()"
+        (change)="tema.elegirTema($event.value)">
+        @for (opcion of temas; track opcion.valor) {
+          <mat-button-toggle [value]="opcion.valor">{{ opcion.etiqueta }}</mat-button-toggle>
+        }
+      </mat-button-toggle-group>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card appearance="outlined">
+    <mat-card-header>
+      <mat-card-title><h2 id="titulo-paleta">Colores</h2></mat-card-title>
+      <mat-card-subtitle>Cada paleta tiene su versión clara y oscura.</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="paletas" role="radiogroup" aria-labelledby="titulo-paleta">
+        @for (opcion of paletas; track opcion.valor) {
+          <!-- Cada muestra lleva su data-paleta: enseña sus propios colores, no los de la paleta actual. -->
+          <label class="paleta" [attr.data-paleta]="opcion.valor">
+            <input type="radio" name="paleta" class="solo-lector" [value]="opcion.valor"
+              [checked]="tema.paleta() === opcion.valor" (change)="tema.elegirPaleta(opcion.valor)" />
+            <span class="muestra" aria-hidden="true">
+              @if (tema.paleta() === opcion.valor) {
+                <mat-icon fontIcon="check" />
+              }
+            </span>
+            <span class="nombre">{{ opcion.etiqueta }}</span>
+          </label>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,7 +1,11 @@
 <ul class="fuentes">
   @for (fuente of fuentes(); track fuente.fuente) {
-    <li class="fuente" [class.problema]="conProblema(fuente)" [attr.data-fuente]="fuente.fuente">
-      <strong>{{ fuente.nombre }}</strong>
+    <li class="fuente" [class.problema]="conProblema(fuente)" [attr.data-fuente]="fuente.fuente"
+      [attr.data-estado]="fuente.estado">
+      <div class="cabeza">
+        <strong class="nombre">{{ fuente.nombre }}</strong>
+        <mat-icon class="icono" [fontIcon]="iconos[fuente.estado]" aria-hidden="true" />
+      </div>
       <span class="estado">{{ estados[fuente.estado] }}</span>
       @if (fuente.ultimaCorrecta) {
         <span class="fecha">Última lectura correcta: {{ fuente.ultimaCorrecta | date: 'd/M/yyyy HH:mm' }}</span>
