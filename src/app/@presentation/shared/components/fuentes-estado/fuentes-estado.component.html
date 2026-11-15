@@ -1,0 +1,16 @@
+<ul class="fuentes">
+  @for (fuente of fuentes(); track fuente.fuente) {
+    <li class="fuente" [class.problema]="conProblema(fuente)" [attr.data-fuente]="fuente.fuente">
+      <strong>{{ fuente.nombre }}</strong>
+      <span class="estado">{{ estados[fuente.estado] }}</span>
+      @if (fuente.ultimaCorrecta) {
+        <span class="fecha">Última lectura correcta: {{ fuente.ultimaCorrecta | date: 'd/M/yyyy HH:mm' }}</span>
+      } @else if (fuente.estado !== 'SIN_LEER') {
+        <span class="fecha">Sin lecturas correctas</span>
+      }
+      @if (conProblema(fuente) && fuente.detalle) {
+        <span class="detalle">{{ fuente.detalle }}</span>
+      }
+    </li>
+  }
+</ul>

@@ -1,0 +1,94 @@
+<mat-toolbar>Perfil · Ofertas</mat-toolbar>
+@if (store.ocupado()) {
+  <mat-progress-bar mode="indeterminate" />
+}
+
+<main>
+  <mat-card appearance="outlined">
+    <mat-card-header>
+      <mat-card-title>Fuentes</mat-card-title>
+      <mat-card-subtitle>Se leen una vez al día. Una fuente que falla o bloquea no cuenta como día sin ofertas.</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <app-fuentes-estado [fuentes]="store.fuentes()" />
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card appearance="outlined">
+    <mat-card-header>
+      <mat-card-title>Filtros</mat-card-title>
+      <mat-card-subtitle>Por defecto: nuevas de encaje alto y medio.</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <form class="filtros" [formGroup]="filtros" (ngSubmit)="aplicar()">
+        <mat-form-field>
+          <mat-label>Encaje</mat-label>
+          <mat-select formControlName="encaje" multiple>
+            @for (opcion of encajes; track opcion.valor) {
+              <mat-option [value]="opcion.valor">{{ opcion.etiqueta }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="estado" multiple>
+            @for (opcion of estados; track opcion.valor) {
+              <mat-option [value]="opcion.valor">{{ opcion.etiqueta }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Fuente</mat-label>
+          <mat-select formControlName="fuente" multiple>
+            @for (opcion of fuentesCatalogo; track opcion.valor) {
+              <mat-option [value]="opcion.valor">{{ opcion.etiqueta }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Modalidad</mat-label>
+          <mat-select formControlName="modalidad" multiple>
+            @for (opcion of modalidades; track opcion.valor) {
+              <mat-option [value]="opcion.valor">{{ opcion.etiqueta }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Tecnología</mat-label>
+          <mat-select formControlName="tecnologia">
+            <mat-option [value]="null">Todas</mat-option>
+            @for (nombre of store.tecnologias().principales; track nombre) {
+              <mat-option [value]="nombre">{{ nombre }}</mat-option>
+            }
+            @for (nombre of store.tecnologias().secundarias; track nombre) {
+              <mat-option [value]="nombre">{{ nombre }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Desde</mat-label>
+          <input matInput type="date" formControlName="desde" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Hasta</mat-label>
+          <input matInput type="date" formControlName="hasta" />
+        </mat-form-field>
+        <div class="acciones">
+          <button mat-flat-button type="submit" [disabled]="store.ocupado()">Aplicar</button>
+          <button mat-stroked-button type="button" (click)="restablecer()" [disabled]="store.ocupado()">
+            Restablecer
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  @if (store.cargado()) {
+    <p class="total">{{ store.ofertas().length }} ofertas</p>
+    @for (oferta of store.ofertas(); track oferta.id) {
+      <app-oferta-tarjeta [oferta]="oferta" />
+    } @empty {
+      <p class="vacio">No hay ofertas con estos filtros.</p>
+    }
+  }
+</main>

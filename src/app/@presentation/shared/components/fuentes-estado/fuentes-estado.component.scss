@@ -1,0 +1,26 @@
+.fuentes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fuente {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  align-items: baseline;
+}
+
+.problema .estado {
+  color: var(--mat-sys-error);
+  font-weight: 600;
+}
+
+.fecha,
+.detalle {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.875rem;
+}

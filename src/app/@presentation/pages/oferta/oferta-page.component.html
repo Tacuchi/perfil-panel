@@ -1,0 +1,85 @@
+<mat-toolbar>Perfil · Oferta</mat-toolbar>
+@if (store.ocupado()) {
+  <mat-progress-bar mode="indeterminate" />
+}
+
+<main>
+  <a routerLink="/ofertas" class="volver">← Volver a las ofertas</a>
+
+  @if (store.detalle(); as detalle) {
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>{{ detalle.oferta.titulo }}</mat-card-title>
+        <mat-card-subtitle>
+          {{ detalle.oferta.empresa ?? 'Empresa no informada' }} · {{ detalle.oferta.fuenteNombre }} ·
+          {{ detalle.oferta.fecha | date: 'd/M/yyyy' }} · {{ modalidad(detalle.oferta.modalidad) }}@if (detalle.oferta.ubicacion) {, {{ detalle.oferta.ubicacion }}}
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-chip-set>
+          <mat-chip>Encaje: {{ encaje(detalle.oferta.encaje) }}</mat-chip>
+          <mat-chip class="estado">{{ estado(detalle.oferta.estado) }}</mat-chip>
+          @if (!detalle.oferta.publicada) {
+            <mat-chip>Ya no publicada</mat-chip>
+          }
+        </mat-chip-set>
+        @if (detalle.oferta.postuladaEn) {
+          <p class="postulada">Postulada el {{ detalle.oferta.postuladaEn | date: 'd/M/yyyy' }}</p>
+        }
+        <ul class="motivos">
+          @for (motivo of detalle.oferta.motivos; track motivo) {
+            <li>{{ motivo }}</li>
+          }
+        </ul>
+        @if (detalle.oferta.posiblesRepetidas.length > 0) {
+          <p>
+            Posible repetida, también en:
+            @for (otra of detalle.oferta.posiblesRepetidas; track otra.id; let ultima = $last) {
+              <a [routerLink]="['/ofertas', otra.id]">{{ otra.fuenteNombre }}</a>@if (!ultima) {, }
+            }
+          </p>
+        }
+      </mat-card-content>
+      <mat-card-actions class="acciones">
+        @for (marca of marcas; track marca.estado) {
+          <button
+            mat-stroked-button
+            type="button"
+            [attr.data-estado]="marca.estado"
+            [disabled]="store.ocupado() || detalle.oferta.estado === marca.estado"
+            (click)="store.marcar(marca.estado)"
+          >
+            {{ marca.texto }}
+          </button>
+        }
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Postular</mat-card-title>
+        <mat-card-subtitle>El panel no postula ni escribe por ti.</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="postular">
+        <a mat-flat-button class="original" [href]="detalle.oferta.url" target="_blank" rel="noopener noreferrer"
+          >Abrir la publicación en {{ detalle.oferta.fuenteNombre }}</a
+        >
+        @if (correo(); as enlace) {
+          <p class="contacto">Contacto: <span class="correo">{{ detalle.correoContacto }}</span></p>
+          <a mat-stroked-button class="escribir" [href]="enlace">Escribir correo con el enlace al CV</a>
+        } @else {
+          <p class="contacto">La oferta no trae un correo de contacto: postula desde la publicación.</p>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Texto de la oferta</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="descripcion">{{ detalle.descripcion }}</p>
+      </mat-card-content>
+    </mat-card>
+  }
+</main>

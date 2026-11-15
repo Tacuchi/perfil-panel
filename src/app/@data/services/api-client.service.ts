@@ -28,6 +28,10 @@ export class ApiClientService {
     return this.http.put<T>(url, cuerpo).pipe(catchError((error) => this.formatErrors(error)));
   }
 
+  patch<T>(url: string, cuerpo: unknown): Observable<T> {
+    return this.http.patch<T>(url, cuerpo).pipe(catchError((error) => this.formatErrors(error)));
+  }
+
   private formatErrors(error: HttpErrorResponse): Observable<never> {
     this.mostrar(error);
     return throwError(() => error);

@@ -1,0 +1,25 @@
+main {
+  display: grid;
+  gap: 16px;
+  max-width: 880px;
+  margin: 16px auto;
+  padding: 0 16px;
+}
+
+.filtros {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0 12px;
+}
+
+.acciones {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.total,
+.vacio {
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
+}
