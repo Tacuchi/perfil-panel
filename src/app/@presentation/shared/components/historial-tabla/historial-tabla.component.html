@@ -1,0 +1,43 @@
+@if (versiones().length === 0) {
+  <p class="vacio">Todavía no hay versiones. Sube la primera.</p>
+} @else {
+  <table mat-table [dataSource]="versiones()">
+    <ng-container matColumnDef="fecha">
+      <th mat-header-cell *matHeaderCellDef>Fecha</th>
+      <td mat-cell *matCellDef="let v">{{ v.fecha | date: 'dd/MM/yyyy HH:mm' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="estado">
+      <th mat-header-cell *matHeaderCellDef>Estado</th>
+      <td mat-cell *matCellDef="let v">
+        @if (v.vigente) {
+          <mat-chip highlighted>Vigente</mat-chip>
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="descargas">
+      <th mat-header-cell *matHeaderCellDef>Descargar</th>
+      <td mat-cell *matCellDef="let v">
+        <a mat-button [href]="urlPdf()(v.id)">PDF</a>
+        @if (v.conWord) {
+          <a mat-button [href]="urlWord()(v.id)">Word</a>
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let v">
+        @if (!v.vigente) {
+          <button mat-stroked-button type="button" [disabled]="ocupado()" (click)="restaurar.emit(v.id)">
+            Dejar vigente
+          </button>
+        }
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+    <tr mat-row *matRowDef="let fila; columns: columnas" [class.vigente]="fila.vigente"></tr>
+  </table>
+}

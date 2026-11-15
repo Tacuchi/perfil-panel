@@ -1,0 +1,23 @@
+main {
+  display: grid;
+  gap: 16px;
+  max-width: 880px;
+  margin: 16px auto;
+  padding: 0 16px;
+}
+
+form {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+}
+
+.archivo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nombre {
+  color: var(--mat-sys-on-surface-variant);
+}
