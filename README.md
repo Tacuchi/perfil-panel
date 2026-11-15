@@ -10,6 +10,7 @@ Requiere Node 24.15 o superior (`.nvmrc`).
 
 - `npm ci` instala las versiones fijadas.
 - `npm test` corre las pruebas (Vitest).
+- `npm start` sirve el panel en `http://localhost:4200` y manda `/api` a la API local (`proxy.conf.mjs`). Con `perfil-api` levantado por `./mvnw spring-boot:test-run`, arranca con `PERFIL_CODIGO_LOCAL="$(cat ../perfil-api/target/codigo-local.jwt)" npm start`.
 - `npm run build` genera el sitio estático en `dist/perfil-panel/browser`.
 
 ## Despliegue
