@@ -47,6 +47,21 @@
   color: var(--mat-sys-on-surface-variant);
 }
 
+// Lecturas restantes a la izquierda y el botón a la derecha, al pie de la tarjeta.
+.lectura {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 8px;
+  margin-top: 8px;
+}
+
+.restantes {
+  font: var(--mat-sys-label-medium);
+  color: var(--mat-sys-on-surface-variant);
+}
+
 [data-estado='CORRECTA'] .icono {
   color: var(--mat-sys-primary);
 }
@@ -64,7 +79,8 @@
   .nombre,
   .icono,
   .fecha,
-  .detalle {
+  .detalle,
+  .restantes {
     color: var(--mat-sys-on-error-container);
   }
 }

@@ -5,6 +5,7 @@ import { provideRouter } from '@angular/router';
 import { IOferta } from '../../../@data/interfaces/oferta';
 import { FUENTES_DE_PRUEBA, ofertaDePrueba } from './ofertas-de-prueba';
 import { OfertasPageComponent } from './ofertas-page.component';
+import { RECOLECCION_NINGUNA } from './recoleccion-de-prueba';
 
 describe('OfertasPageComponent', () => {
   let fixture: ComponentFixture<OfertasPageComponent>;
@@ -41,6 +42,7 @@ describe('OfertasPageComponent', () => {
   }
 
   async function responderInicio(ofertas: IOferta[]): Promise<string> {
+    http.expectOne({ method: 'GET', url: '/api/recoleccion' }).flush(RECOLECCION_NINGUNA);
     http.expectOne({ method: 'GET', url: '/api/fuentes' }).flush(FUENTES_DE_PRUEBA);
     http.expectOne({ method: 'GET', url: '/api/tecnologias' })
       .flush({ principales: ['Flutter', 'Angular'], secundarias: ['Java'] });
@@ -125,7 +127,7 @@ describe('OfertasPageComponent', () => {
     await responderInicio([]);
     await filtrarYAplicar({ encaje: ['NO_ENCAJA'], fuente: ['REMOTIVE'] });
 
-    (pantalla().querySelector('button[type=button]') as HTMLButtonElement).click();
+    (pantalla().querySelector('.acciones button[type=button]') as HTMLButtonElement).click();
     const pedido = pedidoDeLista();
     pedido.flush([]);
     expect(pedido.request.url).toBe('/api/ofertas?encaje=ALTO,MEDIO&estado=NUEVA&desde=2026-11-08&hasta=2026-11-15');

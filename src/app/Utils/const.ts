@@ -1,4 +1,5 @@
 import { Encaje, EstadoLectura, EstadoOferta, Fuente, IFiltroOfertas, Modalidad } from '../@data/interfaces/oferta';
+import { MotivoOmision, OrigenRecoleccion } from '../@data/interfaces/recoleccion';
 
 export const MSG_CARGA_ACEPTADA = 'CV subido. Ya es el vigente.';
 export const MSG_VIGENTE_CAMBIADA = 'Versión restaurada. Ya es la vigente.';
@@ -43,6 +44,30 @@ export const ESTADOS_LECTURA: Readonly<Record<EstadoLectura, string>> = {
   FALLO: 'Falló',
   BLOQUEO: 'Bloqueada',
   SIN_LEER: 'Sin leer todavía',
+};
+
+/** Cada cuánto se consulta el avance de una recolección en curso. */
+export const INTERVALO_AVANCE_MS = 1000;
+
+export const MSG_RECOLECCION_EN_CURSO = 'Hay una recolección en curso. Espera a que termine para lanzar otra.';
+export const MSG_TODAS_EN_TOPE = 'Todas las fuentes llegaron a su tope de lecturas de hoy.';
+export const MSG_FUENTE_EN_TOPE = 'Llegó a su tope de lecturas de hoy.';
+
+export const ORIGENES_RECOLECCION: Readonly<Record<OrigenRecoleccion, string>> = {
+  DEMANDA: 'a demanda',
+  PROGRAMADA: 'programada',
+};
+
+export const MOTIVOS_OMISION: Readonly<Record<MotivoOmision, string>> = {
+  TOPE_DIARIO: 'No leída: llegó a su tope de lecturas de hoy',
+};
+
+/** Cómo terminó cada fuente de una recolección. */
+export const RESULTADOS_LECTURA: Readonly<Record<EstadoLectura, string>> = {
+  CORRECTA: 'Leída',
+  FALLO: 'Falló',
+  BLOQUEO: 'Bloqueada',
+  SIN_LEER: 'Sin leer',
 };
 
 /** Días hacia atrás que cubre el rango de fechas por defecto. */

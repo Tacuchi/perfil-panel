@@ -45,6 +45,12 @@ export class OfertasStore {
     this.buscar();
   }
 
+  /** Tras una recolección: fuentes y lista con lo recién leído, con el mismo filtro. */
+  refrescar(): void {
+    this.ejecutar(this.servicio.fuentes().pipe(tap((fuentes) => this.state.update((s) => ({ ...s, fuentes })))));
+    this.buscar();
+  }
+
   aplicar(filtro: IFiltroOfertas): void {
     this.state.update((s) => ({ ...s, filtro }));
     this.buscar();

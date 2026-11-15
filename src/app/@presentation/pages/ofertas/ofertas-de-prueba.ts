@@ -35,14 +35,14 @@ export function detalleDePrueba(cambios: Partial<IOferta> = {}, correo: string |
 export const FUENTES_DE_PRUEBA: IFuente[] = [
   {
     fuente: 'GET_ON_BOARD', nombre: 'Get on Board', estado: 'CORRECTA', detalle: null,
-    ultimaLectura: '2026-11-15T12:00:00Z', ultimaCorrecta: '2026-11-15T12:00:00Z', ofertasLeidas: 40,
+    ultimaLectura: '2026-11-15T12:00:00Z', ultimaCorrecta: '2026-11-15T12:00:00Z', ofertasLeidas: 40, lecturasRestantes: 2,
   },
   {
     fuente: 'REMOTIVE', nombre: 'Remotive', estado: 'SIN_LEER', detalle: null,
-    ultimaLectura: null, ultimaCorrecta: null, ofertasLeidas: 0,
+    ultimaLectura: null, ultimaCorrecta: null, ofertasLeidas: 0, lecturasRestantes: 3,
   },
   {
     fuente: 'REMOTE_OK', nombre: 'Remote OK', estado: 'BLOQUEO', detalle: 'el sitio rechazó la lectura (HTTP 403)',
-    ultimaLectura: '2026-11-15T12:00:00Z', ultimaCorrecta: '2026-11-14T12:00:00Z', ofertasLeidas: 0,
+    ultimaLectura: '2026-11-15T12:00:00Z', ultimaCorrecta: '2026-11-14T12:00:00Z', ofertasLeidas: 0, lecturasRestantes: 1,
   },
 ];

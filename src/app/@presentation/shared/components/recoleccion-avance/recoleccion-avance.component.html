@@ -1,0 +1,30 @@
+<div class="recoleccion" [attr.data-estado]="recoleccion().estado" role="status" aria-live="polite">
+  <p class="titulo">
+    @if (enCurso()) {
+      Recolección {{ origenes[recoleccion().origen ?? 'DEMANDA'] }} en curso:
+      {{ recoleccion().terminadas }} de {{ recoleccion().total }} fuentes
+    } @else {
+      Última recolección {{ origenes[recoleccion().origen ?? 'DEMANDA'] }}, terminada el
+      {{ recoleccion().fin | date: 'd/M/yyyy HH:mm' }}
+    }
+  </p>
+  <mat-progress-bar mode="determinate" [value]="porcentaje()"
+    [attr.aria-label]="'Fuentes terminadas: ' + recoleccion().terminadas + ' de ' + recoleccion().total" />
+  <ul class="pasos">
+    @for (fuente of recoleccion().fuentes; track fuente.fuente) {
+      <li class="paso" [attr.data-fuente]="fuente.fuente" [attr.data-paso]="fuente.paso"
+        [attr.data-resultado]="fuente.resultado">
+        <mat-icon class="icono" [fontIcon]="icono(fuente)" aria-hidden="true" />
+        <span class="nombre">{{ fuente.nombre }}</span>
+        <span class="texto">{{ paso(fuente) }}</span>
+      </li>
+    }
+    @for (omitida of recoleccion().omitidas; track omitida.fuente) {
+      <li class="paso omitida" [attr.data-fuente]="omitida.fuente" data-paso="OMITIDA">
+        <mat-icon class="icono" fontIcon="do_not_disturb_on" aria-hidden="true" />
+        <span class="nombre">{{ omitida.nombre }}</span>
+        <span class="texto">{{ motivos[omitida.motivo] }}</span>
+      </li>
+    }
+  </ul>
+</div>

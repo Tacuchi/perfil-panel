@@ -35,6 +35,21 @@
   }
 }
 
+// El botón general queda junto al título; la ayuda baja a su propia fila.
+.leer-todas {
+  margin-left: auto;
+}
+
+.fuentes-titulo .ayuda {
+  flex-basis: 100%;
+}
+
+.motivo {
+  margin: 0;
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-on-surface-variant);
+}
+
 .ayuda {
   margin: 0;
   color: var(--mat-sys-on-surface-variant);
