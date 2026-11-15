@@ -48,16 +48,18 @@
 }
 
 // Lecturas restantes a la izquierda y el botón a la derecha, al pie de la tarjeta.
+// El texto se ajusta en varias líneas y el botón no baja de fila.
 .lectura {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 4px 8px;
+  gap: 8px;
   margin-top: 8px;
 }
 
 .restantes {
+  flex: 1;
+  min-width: 0;
   font: var(--mat-sys-label-medium);
   color: var(--mat-sys-on-surface-variant);
 }
