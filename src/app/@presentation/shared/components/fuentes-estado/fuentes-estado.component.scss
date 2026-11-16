@@ -50,18 +50,18 @@
   color: var(--mat-sys-on-surface-variant);
 }
 
-// Lecturas restantes a la izquierda y el botón a la derecha, al pie de la tarjeta.
-// El texto se ajusta en varias líneas y el botón no baja de fila.
+// La ayuda ocupa su propia línea para no estrecharse junto a los botones.
 .lectura {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 8px;
   margin-top: 8px;
 }
 
 .restantes {
-  flex: 1;
+  flex: 0 0 100%;
   min-width: 0;
   font: var(--mat-sys-label-medium);
   color: var(--mat-sys-on-surface-variant);
@@ -79,6 +79,10 @@
 
 [data-estado='CORRECTA'] .icono {
   color: var(--mat-sys-primary);
+}
+
+[data-parcial='true'] .icono {
+  color: var(--mat-sys-tertiary);
 }
 
 // Una fuente que falla o bloquea pide atención: tarjeta rellena con el contenedor de error.

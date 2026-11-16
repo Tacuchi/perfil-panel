@@ -90,6 +90,9 @@ describe('Conexiones de pago', () => {
     expect(carga.request.body).toEqual({ clave: 'clave-de-prueba' });
     expect(campoClave().value).toBe('');
     carga.flush(CONEXION_PAGO_CON_CLAVE);
+    http.expectOne({ method: 'GET', url: '/api/fuentes' }).flush(
+      FUENTES_PAGO_SIN_CONFIGURAR.map((c) => c.fuente === 'COMPUTRABAJO' ? CONEXION_PAGO_CON_CLAVE : c),
+    );
     fixture.detectChanges();
 
     expect(textoDe(enTarjeta('.clave'))).toContain('Tiene clave desde 16/11/2026');

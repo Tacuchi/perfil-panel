@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Observable, finalize } from 'rxjs';
+import { Observable, finalize, switchMap } from 'rxjs';
 import { IConexion } from '../../../@data/interfaces/conexion';
 import { Fuente } from '../../../@data/interfaces/oferta';
 import { ConexionesService } from '../../../@data/services/conexiones.service';
@@ -35,8 +35,8 @@ export class ConexionesStore {
   }
 
   cargarClave(fuente: Fuente, clave: string): void {
-    this.ejecutar(this.servicio.cargarClave(fuente, clave), (conexion) => {
-      this.reemplazar(conexion);
+    this.ejecutar(this.servicio.cargarClave(fuente, clave).pipe(switchMap(() => this.servicio.listar())), (conexiones) => {
+      this.state.update((s) => ({ ...s, conexiones }));
       this.toast.exito(MSG_CLAVE_GUARDADA);
     });
   }

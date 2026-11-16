@@ -9,33 +9,19 @@
       [disabled]="recoleccion.ocupada() || !hayLecturas()">
       <mat-icon fontIcon="sync" />Leer todas ahora
     </button>
-    @if (deMaquina().length > 0) {
-      <button mat-stroked-button type="button" class="leer-maquina" (click)="recoleccion.leerDesdeMaquina()"
-        [disabled]="recoleccion.ocupada() || !maquinaLeible()">
-        <mat-icon fontIcon="computer" />Leer desde mi máquina
-      </button>
-    }
     <p class="ayuda">
-      Nada se lee solo: cada lectura la lanzas tú, con «Leer» o «Leer todas ahora», mientras les queden lecturas hoy.
+      Nada se lee solo: cada lectura la lanzas tú, con «Leer» o «Leer todas ahora», siempre que tengan saldo o lecturas disponibles.
       Una conexión pausada no se lee hasta reanudarla. Una que falla o bloquea no cuenta como día sin ofertas.
     </p>
     @if (dePago().length > 0) {
       <p class="ayuda">
-        Las conexiones de pago necesitan su clave y un tope mensual de gasto. Al llegar al tope no se leen hasta el mes
-        siguiente o hasta que lo subas.
-      </p>
-    }
-    @if (deMaquina().length > 0) {
-      <p class="ayuda">
-        Las conexiones de tu máquina solo se leen con «Leer desde mi máquina», que abre el lector instalado en esta Mac.
+        Computrabajo, LinkedIn y Bumeran comparten una clave de Apify. Cada conexión tiene su propio tope mensual y
+        consumo, sin límite de lecturas al día. Al llegar al tope, sube el importe o espera al mes siguiente.
       </p>
     }
   </div>
   @if (motivoBloqueo(); as motivo) {
     <p class="motivo" role="status">{{ motivo }}</p>
-  }
-  @if (deMaquina().length > 0 && !maquinaLeible() && !recoleccion.enCurso()) {
-    <p class="motivo maquina" role="status">{{ msgSinMaquina }}</p>
   }
   @if (recoleccion.recoleccion(); as actual) {
     @if (actual.estado !== 'NINGUNA') {

@@ -6,6 +6,7 @@ import { IConexion } from '../../../../@data/interfaces/conexion';
 import { EstadoLectura, Fuente } from '../../../../@data/interfaces/oferta';
 import {
   ESTADOS_CONEXION,
+  LECTURA_PARCIAL,
   ESTADOS_LECTURA,
   MSG_FUENTE_EN_TOPE,
   REQUISITOS,
@@ -51,6 +52,14 @@ export class FuentesEstadoComponent {
     BLOQUEO: 'block',
     SIN_LEER: 'schedule',
   };
+
+  protected estadoDe(fuente: IConexion): string {
+    return fuente.parcial ? LECTURA_PARCIAL : this.estados[fuente.estado];
+  }
+
+  protected iconoDe(fuente: IConexion): string {
+    return fuente.parcial ? 'warning' : this.iconos[fuente.estado];
+  }
 
   /** Si tiene lo que necesita, o null si no necesita nada. */
   protected tiene(fuente: IConexion): string | null {

@@ -16,17 +16,25 @@
   <ul class="pasos">
     @for (fuente of recoleccion().fuentes; track fuente.fuente) {
       <li class="paso" [attr.data-fuente]="fuente.fuente" [attr.data-paso]="fuente.paso"
-        [attr.data-resultado]="fuente.resultado">
+        [attr.data-resultado]="fuente.resultado" [attr.data-parcial]="fuente.parcial ?? false">
         <mat-icon class="icono" [fontIcon]="icono(fuente)" aria-hidden="true" />
         <span class="nombre">{{ fuente.nombre }}</span>
         <span class="texto">{{ paso(fuente) }}</span>
+        @if (fuente.costoUsd !== null && fuente.costoUsd !== undefined) {
+          <span class="costo">Costo: {{ dolares(fuente.costoUsd) }}</span>
+        }
+        @if (fuente.detalle) {
+          <span class="detalle">{{ fuente.detalle }}</span>
+        }
       </li>
     }
     @for (omitida of recoleccion().omitidas; track omitida.fuente) {
       <li class="paso omitida" [attr.data-fuente]="omitida.fuente" data-paso="OMITIDA">
         <mat-icon class="icono" fontIcon="do_not_disturb_on" aria-hidden="true" />
         <span class="nombre">{{ omitida.nombre }}</span>
-        <span class="texto">{{ motivos[omitida.motivo] }}</span>
+        <span class="texto">{{ motivos[omitida.motivo] }}@if (omitida.motivo === 'TOPE_MENSUAL' && omitida.gastado !== null && omitida.gastado !== undefined) {
+          · Gastado {{ dolares(omitida.gastado) }} de {{ dolares(omitida.topeMensual ?? 0) }}
+        }</span>
       </li>
     }
   </ul>

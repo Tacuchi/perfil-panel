@@ -100,12 +100,14 @@ export const MOTIVOS_OMISION: Readonly<Record<MotivoOmision, string>> = {
   TOPE_MENSUAL: 'No leída: llegó a su tope del mes',
 };
 
+export const LECTURA_PARCIAL = 'Leída en parte';
+
 export const MSG_CLAVE_GUARDADA = 'Clave guardada. Ya no se vuelve a mostrar.';
 export const MSG_TOPE_GUARDADO = 'Tope mensual guardado.';
 
-/** Montos en dólares como los cobra el servicio de pago: hasta tres decimales. */
+/** Montos en dólares como los cobra el servicio de pago: hasta cuatro decimales. */
 export function dolares(monto: number): string {
-  return `US$ ${monto.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 3 })}`;
+  return `US$ ${monto.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}`;
 }
 
 export const MOTIVOS_CIERRE: Readonly<Record<MotivoCierre, string>> = {

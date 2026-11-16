@@ -17,6 +17,7 @@ export interface IConexion {
   nombre: string;
   estado: EstadoLectura;
   detalle: string | null;
+  parcial?: boolean;
   ultimaLectura: string | null;
   ultimaCorrecta: string | null;
   ofertasLeidas: number;

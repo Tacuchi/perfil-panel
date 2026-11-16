@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { IFuenteEnRecoleccion, IRecoleccion } from '../../../../@data/interfaces/recoleccion';
-import { MOTIVOS_CIERRE, MOTIVOS_OMISION, ORIGENES_RECOLECCION, RESULTADOS_LECTURA } from '../../../../Utils/const';
+import { LECTURA_PARCIAL, MOTIVOS_CIERRE, MOTIVOS_OMISION, ORIGENES_RECOLECCION, RESULTADOS_LECTURA, dolares } from '../../../../Utils/const';
 
 /**
  * Avance de la recolección en curso (barra sobre las fuentes lanzadas y paso de cada una) o resultado de la última.
@@ -19,6 +19,7 @@ import { MOTIVOS_CIERRE, MOTIVOS_OMISION, ORIGENES_RECOLECCION, RESULTADOS_LECTU
 export class RecoleccionAvanceComponent {
   readonly recoleccion = input.required<IRecoleccion>();
 
+  protected readonly dolares = dolares;
   protected readonly origenes = ORIGENES_RECOLECCION;
   protected readonly motivos = MOTIVOS_OMISION;
   protected readonly cierres = MOTIVOS_CIERRE;
@@ -47,11 +48,13 @@ export class RecoleccionAvanceComponent {
     if (fuente.paso === 'LEYENDO') {
       return 'sync';
     }
+    if (fuente.parcial) { return 'warning'; }
     return fuente.resultado === 'CORRECTA' ? 'check_circle' : fuente.resultado === 'BLOQUEO' ? 'block' : 'error';
   }
 
   private resultado(fuente: IFuenteEnRecoleccion): string {
-    const texto = fuente.resultado ? RESULTADOS_LECTURA[fuente.resultado] : RESULTADOS_LECTURA.SIN_LEER;
+    const texto = fuente.parcial ? LECTURA_PARCIAL
+      : fuente.resultado ? RESULTADOS_LECTURA[fuente.resultado] : RESULTADOS_LECTURA.SIN_LEER;
     if (fuente.resultado !== 'CORRECTA') {
       return texto;
     }

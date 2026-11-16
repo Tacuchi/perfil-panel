@@ -15,12 +15,17 @@ export interface IFuenteEnRecoleccion {
   paso: PasoFuente;
   resultado: EstadoLectura | null;
   ofertasLeidas: number | null;
+  costoUsd?: number | null;
+  detalle?: string | null;
+  parcial?: boolean;
 }
 
 export interface IFuenteOmitida {
   fuente: Fuente;
   nombre: string;
   motivo: MotivoOmision;
+  gastado?: number | null;
+  topeMensual?: number | null;
 }
 
 /** Avance de la recolección en curso o resultado de la última; terminadas y total cuentan solo las lanzadas. */

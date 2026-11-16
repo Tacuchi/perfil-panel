@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, inject
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MSG_NINGUNA_LEIBLE, MSG_RECOLECCION_EN_CURSO, MSG_SIN_CONEXIONES_MAQUINA, MSG_TODAS_EN_TOPE } from '../../../Utils/const';
+import { MSG_NINGUNA_LEIBLE, MSG_RECOLECCION_EN_CURSO, MSG_TODAS_EN_TOPE } from '../../../Utils/const';
 import { FuentesEstadoComponent } from '../../shared/components/fuentes-estado/fuentes-estado.component';
 import { RecoleccionAvanceComponent } from '../../shared/components/recoleccion-avance/recoleccion-avance.component';
 import { ConexionesStore } from './conexiones.store';
@@ -33,16 +33,6 @@ export class ConexionesPageComponent implements OnInit, OnDestroy {
 
   /** Las conexiones que se leen por un servicio de pago. */
   protected readonly dePago = computed(() => this.store.conexiones().filter((c) => c.via === 'PAGO'));
-
-  /** Las conexiones que se leen desde la máquina de la persona. */
-  protected readonly deMaquina = computed(() => this.store.conexiones().filter((c) => c.via === 'MAQUINA'));
-
-  /** Alguna conexión de la máquina se puede leer hoy: no está pausada y le quedan lecturas. */
-  protected readonly maquinaLeible = computed(() =>
-    this.deMaquina().some((c) => !c.pausada && c.lecturasRestantes > 0),
-  );
-
-  protected readonly msgSinMaquina = MSG_SIN_CONEXIONES_MAQUINA;
 
   /** Por qué no se puede lanzar una recolección ahora; null si se puede. */
   protected readonly motivoBloqueo = computed<string | null>(() => {
