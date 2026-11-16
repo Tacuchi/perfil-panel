@@ -5,7 +5,6 @@ import { buildQuery } from '../../Utils/query';
 import {
   EstadoOferta,
   IFiltroOfertas,
-  IFuente,
   IOferta,
   IOfertaDetalle,
   ITecnologias,
@@ -36,10 +35,6 @@ export class OfertasService {
 
   marcar(id: number, estado: EstadoOferta): Observable<IOfertaDetalle> {
     return this.apiClient.patch<IOfertaDetalle>(`${this.base}/ofertas/${id}`, { estado });
-  }
-
-  fuentes(): Observable<IFuente[]> {
-    return this.apiClient.get<IFuente[]>(`${this.base}/fuentes`);
   }
 
   tecnologias(): Observable<ITecnologias> {

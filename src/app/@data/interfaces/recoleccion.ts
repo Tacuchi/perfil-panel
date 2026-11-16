@@ -4,7 +4,7 @@ import { EstadoLectura, Fuente } from './oferta';
 export type EstadoRecoleccion = 'NINGUNA' | 'EN_CURSO' | 'TERMINADA';
 export type OrigenRecoleccion = 'PROGRAMADA' | 'DEMANDA';
 export type PasoFuente = 'PENDIENTE' | 'LEYENDO' | 'TERMINADA';
-export type MotivoOmision = 'TOPE_DIARIO';
+export type MotivoOmision = 'TOPE_DIARIO' | 'PAUSADA';
 
 /** Una fuente lanzada. Resultado y ofertas leídas solo llegan cuando su paso es TERMINADA. */
 export interface IFuenteEnRecoleccion {

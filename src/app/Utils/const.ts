@@ -1,4 +1,5 @@
 import { Encaje, EstadoLectura, EstadoOferta, Fuente, IFiltroOfertas, Modalidad } from '../@data/interfaces/oferta';
+import { EstadoConexion, Requisito, Via } from '../@data/interfaces/conexion';
 import { MotivoOmision, OrigenRecoleccion } from '../@data/interfaces/recoleccion';
 
 export const MSG_CARGA_ACEPTADA = 'CV subido. Ya es el vigente.';
@@ -52,6 +53,26 @@ export const INTERVALO_AVANCE_MS = 1000;
 export const MSG_RECOLECCION_EN_CURSO = 'Hay una recolección en curso. Espera a que termine para lanzar otra.';
 export const MSG_TODAS_EN_TOPE = 'Todas las fuentes llegaron a su tope de lecturas de hoy.';
 export const MSG_FUENTE_EN_TOPE = 'Llegó a su tope de lecturas de hoy.';
+export const MSG_NINGUNA_LEIBLE = 'Ninguna conexión se puede leer ahora: están pausadas o llegaron a su tope de hoy.';
+
+export const VIAS: Readonly<Record<Via, string>> = {
+  SERVIDOR: 'Se lee desde el servidor',
+  PAGO: 'Se lee por un servicio de pago',
+  MAQUINA: 'Se lee desde tu máquina',
+};
+
+export const REQUISITOS: Readonly<Record<Requisito, string>> = {
+  NADA: 'No necesita nada',
+  CLAVE: 'Necesita una clave',
+  SESION: 'Necesita tu sesión',
+};
+
+/** Solo se muestran las que impiden leer; LISTA no lleva aviso. */
+export const ESTADOS_CONEXION: Readonly<Record<EstadoConexion, string>> = {
+  LISTA: 'Lista',
+  PAUSADA: 'Pausada',
+  FALTA_CONFIGURAR: 'Falta configurar',
+};
 
 export const ORIGENES_RECOLECCION: Readonly<Record<OrigenRecoleccion, string>> = {
   DEMANDA: 'a demanda',
@@ -60,6 +81,7 @@ export const ORIGENES_RECOLECCION: Readonly<Record<OrigenRecoleccion, string>> =
 
 export const MOTIVOS_OMISION: Readonly<Record<MotivoOmision, string>> = {
   TOPE_DIARIO: 'No leída: llegó a su tope de lecturas de hoy',
+  PAUSADA: 'No leída: está pausada',
 };
 
 /** Cómo terminó cada fuente de una recolección. */

@@ -3,9 +3,8 @@ import { HttpTestingController, TestRequest, provideHttpClientTesting } from '@a
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { IOferta } from '../../../@data/interfaces/oferta';
-import { FUENTES_DE_PRUEBA, ofertaDePrueba } from './ofertas-de-prueba';
+import { ofertaDePrueba } from './ofertas-de-prueba';
 import { OfertasPageComponent } from './ofertas-page.component';
-import { RECOLECCION_NINGUNA } from './recoleccion-de-prueba';
 
 describe('OfertasPageComponent', () => {
   let fixture: ComponentFixture<OfertasPageComponent>;
@@ -42,8 +41,6 @@ describe('OfertasPageComponent', () => {
   }
 
   async function responderInicio(ofertas: IOferta[]): Promise<string> {
-    http.expectOne({ method: 'GET', url: '/api/recoleccion' }).flush(RECOLECCION_NINGUNA);
-    http.expectOne({ method: 'GET', url: '/api/fuentes' }).flush(FUENTES_DE_PRUEBA);
     http.expectOne({ method: 'GET', url: '/api/tecnologias' })
       .flush({ principales: ['Flutter', 'Angular'], secundarias: ['Java'] });
     const pedido = pedidoDeLista();
@@ -157,15 +154,13 @@ describe('OfertasPageComponent', () => {
     expect(pantalla().querySelector('.aplicados')).toBeNull();
   });
 
-  it('una fuente bloqueada se ve como bloqueada con su última lectura correcta, no como día sin ofertas', async () => {
+  it('la pantalla de ofertas ya no muestra las fuentes ni lanza recolecciones', async () => {
     await responderInicio([]);
 
-    const remoteOk = pantalla().querySelector('[data-fuente="REMOTE_OK"]') as HTMLElement;
-    expect(remoteOk.textContent).toContain('Bloqueada');
-    expect(remoteOk.textContent).toContain('Última lectura correcta: 14/11/2026');
-    expect(remoteOk.textContent).toContain('HTTP 403');
-    expect(remoteOk.classList).toContain('problema');
-    expect(pantalla().querySelector('[data-fuente="REMOTIVE"]')?.textContent).toContain('Sin leer todavía');
-    expect(pantalla().querySelector('[data-fuente="GET_ON_BOARD"]')?.textContent).toContain('Correcta');
+    expect(pantalla().querySelector('app-fuentes-estado')).toBeNull();
+    expect(pantalla().querySelector('.leer-todas')).toBeNull();
+    expect(pantalla().querySelector('app-recoleccion-avance')).toBeNull();
+    http.expectNone({ method: 'GET', url: '/api/fuentes' });
+    http.expectNone({ method: 'GET', url: '/api/recoleccion' });
   });
 });

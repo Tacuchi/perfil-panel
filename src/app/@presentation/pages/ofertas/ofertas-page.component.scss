@@ -18,44 +18,6 @@
   margin-bottom: 16px;
 }
 
-// Fuentes: título y una tarjeta indicador por fuente, separados de los filtros.
-.fuentes {
-  display: grid;
-  gap: 12px;
-}
-
-.fuentes-titulo {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 16px;
-
-  h2 {
-    font: var(--mat-sys-title-medium);
-  }
-}
-
-// El botón general queda junto al título; la ayuda baja a su propia fila.
-.leer-todas {
-  margin-left: auto;
-}
-
-.fuentes-titulo .ayuda {
-  flex-basis: 100%;
-}
-
-.motivo {
-  margin: 0;
-  font: var(--mat-sys-body-medium);
-  color: var(--mat-sys-on-surface-variant);
-}
-
-.ayuda {
-  margin: 0;
-  color: var(--mat-sys-on-surface-variant);
-  font: var(--mat-sys-body-small);
-}
-
 .plegable summary {
   display: none;
 }

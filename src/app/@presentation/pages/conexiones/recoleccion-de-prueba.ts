@@ -1,4 +1,4 @@
-import { IFuente } from '../../../@data/interfaces/oferta';
+import { IConexion } from '../../../@data/interfaces/conexion';
 import { IRecoleccion } from '../../../@data/interfaces/recoleccion';
 
 /** Cuerpo de un lanzamiento rechazado (RFC 9457 con su motivo). */
@@ -285,7 +285,7 @@ export const RECHAZO_TOPE: IRechazo = {
 };
 
 /** Fuentes nunca leídas, con sus tres lecturas. */
-export const FUENTES_SIN_LEER: IFuente[] = [
+export const FUENTES_SIN_LEER: IConexion[] = [
   {
     "fuente": "GET_ON_BOARD",
     "nombre": "Get on Board",
@@ -294,7 +294,13 @@ export const FUENTES_SIN_LEER: IFuente[] = [
     "ultimaLectura": null,
     "ultimaCorrecta": null,
     "ofertasLeidas": 0,
-    "lecturasRestantes": 3
+    "lecturasRestantes": 3,
+    "via": "SERVIDOR",
+    "necesita": "NADA",
+    "tieneLoQueNecesita": true,
+    "pausada": false,
+    "motivoPausa": null,
+    "estadoConexion": "LISTA"
   },
   {
     "fuente": "REMOTIVE",
@@ -304,7 +310,13 @@ export const FUENTES_SIN_LEER: IFuente[] = [
     "ultimaLectura": null,
     "ultimaCorrecta": null,
     "ofertasLeidas": 0,
-    "lecturasRestantes": 3
+    "lecturasRestantes": 3,
+    "via": "SERVIDOR",
+    "necesita": "NADA",
+    "tieneLoQueNecesita": true,
+    "pausada": false,
+    "motivoPausa": null,
+    "estadoConexion": "LISTA"
   },
   {
     "fuente": "REMOTE_OK",
@@ -314,12 +326,18 @@ export const FUENTES_SIN_LEER: IFuente[] = [
     "ultimaLectura": null,
     "ultimaCorrecta": null,
     "ofertasLeidas": 0,
-    "lecturasRestantes": 3
+    "lecturasRestantes": 3,
+    "via": "SERVIDOR",
+    "necesita": "NADA",
+    "tieneLoQueNecesita": true,
+    "pausada": false,
+    "motivoPausa": null,
+    "estadoConexion": "LISTA"
   }
 ];
 
 /** Fuentes sin lecturas restantes. */
-export const FUENTES_EN_TOPE: IFuente[] = [
+export const FUENTES_EN_TOPE: IConexion[] = [
   {
     "fuente": "GET_ON_BOARD",
     "nombre": "Get on Board",
@@ -328,7 +346,13 @@ export const FUENTES_EN_TOPE: IFuente[] = [
     "ultimaLectura": "2026-11-15T20:10:46.749263Z",
     "ultimaCorrecta": "2026-11-15T20:10:46.749263Z",
     "ofertasLeidas": 6,
-    "lecturasRestantes": 0
+    "lecturasRestantes": 0,
+    "via": "SERVIDOR",
+    "necesita": "NADA",
+    "tieneLoQueNecesita": true,
+    "pausada": false,
+    "motivoPausa": null,
+    "estadoConexion": "LISTA"
   },
   {
     "fuente": "REMOTIVE",
@@ -338,7 +362,13 @@ export const FUENTES_EN_TOPE: IFuente[] = [
     "ultimaLectura": "2026-11-15T20:10:45.163214Z",
     "ultimaCorrecta": "2026-11-15T20:10:45.163214Z",
     "ofertasLeidas": 4,
-    "lecturasRestantes": 0
+    "lecturasRestantes": 0,
+    "via": "SERVIDOR",
+    "necesita": "NADA",
+    "tieneLoQueNecesita": true,
+    "pausada": false,
+    "motivoPausa": null,
+    "estadoConexion": "LISTA"
   },
   {
     "fuente": "REMOTE_OK",
@@ -348,6 +378,213 @@ export const FUENTES_EN_TOPE: IFuente[] = [
     "ultimaLectura": "2026-11-15T20:10:46.749263Z",
     "ultimaCorrecta": "2026-11-15T20:10:46.749263Z",
     "ofertasLeidas": 4,
-    "lecturasRestantes": 0
+    "lecturasRestantes": 0,
+    "via": "SERVIDOR",
+    "necesita": "NADA",
+    "tieneLoQueNecesita": true,
+    "pausada": false,
+    "motivoPausa": null,
+    "estadoConexion": "LISTA"
+  }
+];
+
+/** Remotive pausada por la persona; las otras dos, listas. */
+export const FUENTES_CON_PAUSADA: IConexion[] = [
+  {
+    "fuente": "GET_ON_BOARD",
+    "nombre": "Get on Board",
+    "estado": "SIN_LEER",
+    "detalle": null,
+    "ultimaLectura": null,
+    "ultimaCorrecta": null,
+    "ofertasLeidas": 0,
+    "lecturasRestantes": 3,
+    "via": "SERVIDOR",
+    "necesita": "NADA",
+    "tieneLoQueNecesita": true,
+    "pausada": false,
+    "motivoPausa": null,
+    "estadoConexion": "LISTA"
+  },
+  {
+    "fuente": "REMOTIVE",
+    "nombre": "Remotive",
+    "estado": "SIN_LEER",
+    "detalle": null,
+    "ultimaLectura": null,
+    "ultimaCorrecta": null,
+    "ofertasLeidas": 0,
+    "lecturasRestantes": 3,
+    "via": "SERVIDOR",
+    "necesita": "NADA",
+    "tieneLoQueNecesita": true,
+    "pausada": true,
+    "motivoPausa": null,
+    "estadoConexion": "PAUSADA"
+  },
+  {
+    "fuente": "REMOTE_OK",
+    "nombre": "Remote OK",
+    "estado": "SIN_LEER",
+    "detalle": null,
+    "ultimaLectura": null,
+    "ultimaCorrecta": null,
+    "ofertasLeidas": 0,
+    "lecturasRestantes": 3,
+    "via": "SERVIDOR",
+    "necesita": "NADA",
+    "tieneLoQueNecesita": true,
+    "pausada": false,
+    "motivoPausa": null,
+    "estadoConexion": "LISTA"
+  }
+];
+
+/** Respuesta de pausar Remotive. */
+export const CONEXION_PAUSADA: IConexion = {
+  "fuente": "REMOTIVE",
+  "nombre": "Remotive",
+  "estado": "SIN_LEER",
+  "detalle": null,
+  "ultimaLectura": null,
+  "ultimaCorrecta": null,
+  "ofertasLeidas": 0,
+  "lecturasRestantes": 3,
+  "via": "SERVIDOR",
+  "necesita": "NADA",
+  "tieneLoQueNecesita": true,
+  "pausada": true,
+  "motivoPausa": null,
+  "estadoConexion": "PAUSADA"
+};
+
+/** Respuesta de reanudar Remotive. */
+export const CONEXION_REANUDADA: IConexion = {
+  "fuente": "REMOTIVE",
+  "nombre": "Remotive",
+  "estado": "SIN_LEER",
+  "detalle": null,
+  "ultimaLectura": null,
+  "ultimaCorrecta": null,
+  "ofertasLeidas": 0,
+  "lecturasRestantes": 3,
+  "via": "SERVIDOR",
+  "necesita": "NADA",
+  "tieneLoQueNecesita": true,
+  "pausada": false,
+  "motivoPausa": null,
+  "estadoConexion": "LISTA"
+};
+
+/** Lanzamiento general con Remotive pausada: la omite con su motivo. */
+export const RECOLECCION_GENERAL_CON_PAUSADA: IRecoleccion = {
+  "estado": "EN_CURSO",
+  "origen": "DEMANDA",
+  "inicio": "2026-11-16T00:56:21.682973Z",
+  "fin": null,
+  "terminadas": 0,
+  "total": 2,
+  "fuentes": [
+    {
+      "fuente": "GET_ON_BOARD",
+      "nombre": "Get on Board",
+      "paso": "PENDIENTE",
+      "resultado": null,
+      "ofertasLeidas": null
+    },
+    {
+      "fuente": "REMOTE_OK",
+      "nombre": "Remote OK",
+      "paso": "PENDIENTE",
+      "resultado": null,
+      "ofertasLeidas": null
+    }
+  ],
+  "omitidas": [
+    {
+      "fuente": "REMOTIVE",
+      "nombre": "Remotive",
+      "motivo": "PAUSADA"
+    }
+  ]
+};
+
+/** Lanzar una conexión pausada. */
+export const RECHAZO_PAUSADA: IRechazo = {
+  "detail": "Remotive está pausada. Reanúdala en Conexiones para leerla.",
+  "instance": "/api/recoleccion/REMOTIVE",
+  "status": 409,
+  "title": "Conflict",
+  "motivo": "PAUSADA"
+};
+
+/** Una conexión correcta, una sin leer y una bloqueada con su última lectura correcta del día anterior. */
+export const FUENTES_DE_PRUEBA: IConexion[] = [
+  {
+    fuente: 'GET_ON_BOARD', nombre: 'Get on Board', estado: 'CORRECTA', detalle: null,
+    ultimaLectura: '2026-11-15T12:00:00Z', ultimaCorrecta: '2026-11-15T12:00:00Z', ofertasLeidas: 40, lecturasRestantes: 2,
+    via: 'SERVIDOR', necesita: 'NADA', tieneLoQueNecesita: true, pausada: false, motivoPausa: null, estadoConexion: 'LISTA',
+  },
+  {
+    fuente: 'REMOTIVE', nombre: 'Remotive', estado: 'SIN_LEER', detalle: null,
+    ultimaLectura: null, ultimaCorrecta: null, ofertasLeidas: 0, lecturasRestantes: 3,
+    via: 'SERVIDOR', necesita: 'NADA', tieneLoQueNecesita: true, pausada: false, motivoPausa: null, estadoConexion: 'LISTA',
+  },
+  {
+    fuente: 'REMOTE_OK', nombre: 'Remote OK', estado: 'BLOQUEO', detalle: 'el sitio rechazó la lectura (HTTP 403)',
+    ultimaLectura: '2026-11-15T12:00:00Z', ultimaCorrecta: '2026-11-14T12:00:00Z', ofertasLeidas: 0, lecturasRestantes: 1,
+    via: 'SERVIDOR', necesita: 'NADA', tieneLoQueNecesita: true, pausada: false, motivoPausa: null, estadoConexion: 'LISTA',
+  },
+];
+
+/** Las tres conexiones pausadas (con lecturas de una recolección anterior). */
+export const FUENTES_TODAS_PAUSADAS: IConexion[] = [
+  {
+    "fuente": "GET_ON_BOARD",
+    "nombre": "Get on Board",
+    "estado": "CORRECTA",
+    "detalle": null,
+    "ultimaLectura": "2026-11-16T00:56:21.682973Z",
+    "ultimaCorrecta": "2026-11-16T00:56:21.682973Z",
+    "ofertasLeidas": 6,
+    "lecturasRestantes": 2,
+    "via": "SERVIDOR",
+    "necesita": "NADA",
+    "tieneLoQueNecesita": true,
+    "pausada": true,
+    "motivoPausa": null,
+    "estadoConexion": "PAUSADA"
+  },
+  {
+    "fuente": "REMOTIVE",
+    "nombre": "Remotive",
+    "estado": "CORRECTA",
+    "detalle": null,
+    "ultimaLectura": "2026-11-16T00:56:24.877020Z",
+    "ultimaCorrecta": "2026-11-16T00:56:24.877020Z",
+    "ofertasLeidas": 4,
+    "lecturasRestantes": 2,
+    "via": "SERVIDOR",
+    "necesita": "NADA",
+    "tieneLoQueNecesita": true,
+    "pausada": true,
+    "motivoPausa": null,
+    "estadoConexion": "PAUSADA"
+  },
+  {
+    "fuente": "REMOTE_OK",
+    "nombre": "Remote OK",
+    "estado": "CORRECTA",
+    "detalle": null,
+    "ultimaLectura": "2026-11-16T00:56:21.682973Z",
+    "ultimaCorrecta": "2026-11-16T00:56:21.682973Z",
+    "ofertasLeidas": 4,
+    "lecturasRestantes": 2,
+    "via": "SERVIDOR",
+    "necesita": "NADA",
+    "tieneLoQueNecesita": true,
+    "pausada": true,
+    "motivoPausa": null,
+    "estadoConexion": "PAUSADA"
   }
 ];

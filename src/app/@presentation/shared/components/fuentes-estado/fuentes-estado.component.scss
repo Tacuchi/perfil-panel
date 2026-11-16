@@ -41,6 +41,8 @@
   font: var(--mat-sys-headline-small);
 }
 
+.via,
+.conexion,
 .fecha,
 .detalle {
   font: var(--mat-sys-body-small);
@@ -64,6 +66,16 @@
   color: var(--mat-sys-on-surface-variant);
 }
 
+.conexion {
+  font: var(--mat-sys-label-large);
+  color: var(--mat-sys-on-surface);
+}
+
+// Una conexión pausada o sin configurar no se lee: el resultado de su última lectura pasa a segundo plano.
+.inactiva .estado {
+  color: var(--mat-sys-on-surface-variant);
+}
+
 [data-estado='CORRECTA'] .icono {
   color: var(--mat-sys-primary);
 }
@@ -80,6 +92,8 @@
   &,
   .nombre,
   .icono,
+  .via,
+  .conexion,
   .fecha,
   .detalle,
   .restantes {

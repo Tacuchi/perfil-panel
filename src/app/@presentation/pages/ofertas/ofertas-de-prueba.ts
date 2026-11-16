@@ -1,4 +1,4 @@
-import { IFuente, IOferta, IOfertaDetalle } from '../../../@data/interfaces/oferta';
+import { IOferta, IOfertaDetalle } from '../../../@data/interfaces/oferta';
 
 /** Respuestas con la forma exacta que entrega perfil-api. */
 export function ofertaDePrueba(cambios: Partial<IOferta> = {}): IOferta {
@@ -31,18 +31,3 @@ export function detalleDePrueba(cambios: Partial<IOferta> = {}, correo: string |
     correoContacto: correo,
   };
 }
-
-export const FUENTES_DE_PRUEBA: IFuente[] = [
-  {
-    fuente: 'GET_ON_BOARD', nombre: 'Get on Board', estado: 'CORRECTA', detalle: null,
-    ultimaLectura: '2026-11-15T12:00:00Z', ultimaCorrecta: '2026-11-15T12:00:00Z', ofertasLeidas: 40, lecturasRestantes: 2,
-  },
-  {
-    fuente: 'REMOTIVE', nombre: 'Remotive', estado: 'SIN_LEER', detalle: null,
-    ultimaLectura: null, ultimaCorrecta: null, ofertasLeidas: 0, lecturasRestantes: 3,
-  },
-  {
-    fuente: 'REMOTE_OK', nombre: 'Remote OK', estado: 'BLOQUEO', detalle: 'el sitio rechazó la lectura (HTTP 403)',
-    ultimaLectura: '2026-11-15T12:00:00Z', ultimaCorrecta: '2026-11-14T12:00:00Z', ofertasLeidas: 0, lecturasRestantes: 1,
-  },
-];

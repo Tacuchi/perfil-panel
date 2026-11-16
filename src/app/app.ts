@@ -42,6 +42,7 @@ export class App {
   protected readonly modulos = [
     { ruta: '/cv', texto: 'CV', icono: 'description' },
     { ruta: '/ofertas', texto: 'Ofertas', icono: 'work' },
+    { ruta: '/conexiones', texto: 'Conexiones', icono: 'cable' },
     { ruta: '/ajustes', texto: 'Ajustes', icono: 'settings' },
   ] as const;
 

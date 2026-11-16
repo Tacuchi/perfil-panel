@@ -4,30 +4,6 @@
 
 <div class="ofertas" [class.con-detalle]="detalleAbierto()">
   <div class="cabecera">
-    <section class="fuentes" aria-labelledby="titulo-fuentes">
-      <div class="fuentes-titulo">
-        <h2 id="titulo-fuentes">Fuentes</h2>
-        <button mat-flat-button type="button" class="leer-todas" (click)="recoleccion.lanzar(null)"
-          [disabled]="recoleccion.ocupada() || !hayLecturas()">
-          <mat-icon fontIcon="sync" />Leer todas ahora
-        </button>
-        <p class="ayuda">
-          La lectura programada lee cada fuente una vez al día; puedes volver a leerlas ahora mientras les queden
-          lecturas hoy. Una fuente que falla o bloquea no cuenta como día sin ofertas.
-        </p>
-      </div>
-      @if (motivoBloqueo(); as motivo) {
-        <p class="motivo" role="status">{{ motivo }}</p>
-      }
-      @if (recoleccion.recoleccion(); as actual) {
-        @if (actual.estado !== 'NINGUNA') {
-          <app-recoleccion-avance [recoleccion]="actual" />
-        }
-      }
-      <app-fuentes-estado [fuentes]="store.fuentes()" [ocupada]="recoleccion.ocupada()"
-        (leer)="recoleccion.lanzar($event)" />
-    </section>
-
     <!-- En el teléfono los filtros empiezan plegados para que la lista se vea primero. -->
     <details class="plegable" [open]="!telefono()">
       <summary><mat-icon fontIcon="tune" />Filtros</summary>

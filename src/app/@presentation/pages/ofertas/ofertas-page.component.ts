@@ -1,5 +1,5 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -16,16 +16,11 @@ import {
   ESTADOS_OFERTA,
   FUENTES,
   MODALIDADES,
-  MSG_RECOLECCION_EN_CURSO,
-  MSG_TODAS_EN_TOPE,
   etiqueta,
   filtroPorDefecto,
 } from '../../../Utils/const';
-import { FuentesEstadoComponent } from '../../shared/components/fuentes-estado/fuentes-estado.component';
 import { OfertaTarjetaComponent } from '../../shared/components/oferta-tarjeta/oferta-tarjeta.component';
-import { RecoleccionAvanceComponent } from '../../shared/components/recoleccion-avance/recoleccion-avance.component';
 import { OfertasStore } from './ofertas.store';
-import { RecoleccionStore } from './recoleccion.store';
 
 /** Un filtro aplicado que se ve como chip y se puede quitar. Las fechas van juntas en un solo chip. */
 interface IFiltroAplicado {
@@ -50,10 +45,7 @@ function fechaVisible(iso: string): string {
   return `${dia}/${mes}/${anio}`;
 }
 
-/**
- * Lista de ofertas con sus filtros y el estado de cada fuente, que se puede leer ahora; la oferta elegida se abre al
- * lado.
- */
+/** Lista de ofertas con sus filtros; la oferta elegida se abre al lado. */
 @Component({
   selector: 'app-ofertas-page',
   imports: [
@@ -67,17 +59,14 @@ function fechaVisible(iso: string): string {
     MatProgressBarModule,
     MatIconModule,
     MatTooltipModule,
-    FuentesEstadoComponent,
     OfertaTarjetaComponent,
-    RecoleccionAvanceComponent,
   ],
   templateUrl: './ofertas-page.component.html',
   styleUrl: './ofertas-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OfertasPageComponent implements OnInit, OnDestroy {
+export class OfertasPageComponent implements OnInit {
   protected readonly store = inject(OfertasStore);
-  protected readonly recoleccion = inject(RecoleccionStore);
   private readonly fb = inject(FormBuilder);
 
   /** Ventana compacta de Material 3. */
@@ -99,20 +88,6 @@ export class OfertasPageComponent implements OnInit, OnDestroy {
     tecnologia: this.fb.control<string | null>(null),
     desde: this.fb.control<string | null>(null),
     hasta: this.fb.control<string | null>(null),
-  });
-
-  /** Alguna fuente tiene lecturas disponibles hoy (antes de cargar las fuentes no se sabe: no se bloquea). */
-  protected readonly hayLecturas = computed(() => {
-    const fuentes = this.store.fuentes();
-    return fuentes.length === 0 || fuentes.some((f) => f.lecturasRestantes > 0);
-  });
-
-  /** Por qué no se puede lanzar una recolección ahora; null si se puede. */
-  protected readonly motivoBloqueo = computed<string | null>(() => {
-    if (this.recoleccion.enCurso()) {
-      return MSG_RECOLECCION_EN_CURSO;
-    }
-    return this.hayLecturas() ? null : MSG_TODAS_EN_TOPE;
   });
 
   /** Lo que filtra la lista ahora (lo aplicado, no lo que se está editando en el formulario). */
@@ -139,11 +114,6 @@ export class OfertasPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.filtros.setValue(this.store.filtro());
     this.store.cargar();
-    this.recoleccion.entrar();
-  }
-
-  ngOnDestroy(): void {
-    this.recoleccion.salir();
   }
 
   protected aplicar(): void {

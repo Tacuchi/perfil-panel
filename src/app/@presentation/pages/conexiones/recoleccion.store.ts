@@ -4,7 +4,7 @@ import { Fuente } from '../../../@data/interfaces/oferta';
 import { IRecoleccion } from '../../../@data/interfaces/recoleccion';
 import { RecoleccionService } from '../../../@data/services/recoleccion.service';
 import { INTERVALO_AVANCE_MS } from '../../../Utils/const';
-import { OfertasStore } from './ofertas.store';
+import { ConexionesStore } from './conexiones.store';
 
 interface RecoleccionState {
   recoleccion: IRecoleccion | null;
@@ -13,13 +13,13 @@ interface RecoleccionState {
 
 /**
  * Recolección a demanda y su avance. Mientras corre, consulta el avance cada segundo; al terminar, vuelve a cargar
- * fuentes y lista. La consulta vive solo mientras la pantalla de ofertas está abierta. Un error de la consulta la
+ * las conexiones. La consulta vive solo mientras la pantalla de conexiones está abierta. Un error de la consulta la
  * detiene (el cliente HTTP ya lo mostró): seguir preguntando con la sesión vencida no sirve.
  */
 @Injectable({ providedIn: 'root' })
 export class RecoleccionStore {
   private readonly servicio = inject(RecoleccionService);
-  private readonly ofertas = inject(OfertasStore);
+  private readonly conexiones = inject(ConexionesStore);
 
   private readonly state = signal<RecoleccionState>({ recoleccion: null, lanzando: false });
   private consulta: Subscription | null = null;
@@ -76,7 +76,7 @@ export class RecoleccionStore {
     }
     this.consulta = null;
     if (antes === 'EN_CURSO' && recoleccion.estado === 'TERMINADA') {
-      this.ofertas.refrescar();
+      this.conexiones.cargar();
     }
   }
 

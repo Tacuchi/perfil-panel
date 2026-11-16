@@ -1,11 +1,18 @@
 <ul class="fuentes">
   @for (fuente of fuentes(); track fuente.fuente) {
-    <li class="fuente" [class.problema]="conProblema(fuente)" [attr.data-fuente]="fuente.fuente"
-      [attr.data-estado]="fuente.estado">
+    <li class="fuente" [class.problema]="conProblema(fuente)" [class.inactiva]="fuente.estadoConexion !== 'LISTA'"
+      [attr.data-fuente]="fuente.fuente" [attr.data-estado]="fuente.estado"
+      [attr.data-conexion]="fuente.estadoConexion">
       <div class="cabeza">
         <strong class="nombre">{{ fuente.nombre }}</strong>
         <mat-icon class="icono" [fontIcon]="iconos[fuente.estado]" aria-hidden="true" />
       </div>
+      <span class="via">{{ vias[fuente.via] }} · {{ requisitos[fuente.necesita] }}</span>
+      @if (fuente.estadoConexion !== 'LISTA') {
+        <span class="conexion">
+          {{ estadosConexion[fuente.estadoConexion] }}@if (fuente.motivoPausa) {: {{ fuente.motivoPausa }}}
+        </span>
+      }
       <span class="estado">{{ estados[fuente.estado] }}</span>
       @if (fuente.ultimaCorrecta) {
         <span class="fecha">Última lectura correcta: {{ fuente.ultimaCorrecta | date: 'd/M/yyyy HH:mm' }}</span>
@@ -23,8 +30,19 @@
             {{ msgEnTope }}
           }
         </span>
+        @if (fuente.pausada) {
+          <button mat-button type="button" class="pausa" (click)="reanudar.emit(fuente.fuente)" [disabled]="guardando()"
+            [attr.aria-label]="'Reanudar ' + fuente.nombre">
+            <mat-icon fontIcon="play_arrow" />Reanudar
+          </button>
+        } @else {
+          <button mat-button type="button" class="pausa" (click)="pausar.emit(fuente.fuente)" [disabled]="guardando()"
+            [attr.aria-label]="'Pausar ' + fuente.nombre">
+            <mat-icon fontIcon="pause" />Pausar
+          </button>
+        }
         <button mat-stroked-button type="button" class="leer" (click)="leer.emit(fuente.fuente)"
-          [disabled]="ocupada() || fuente.lecturasRestantes === 0"
+          [disabled]="ocupada() || !sePuedeLeer(fuente)"
           [attr.aria-label]="'Leer ' + fuente.nombre + ' ahora'">
           <mat-icon fontIcon="sync" />Leer
         </button>

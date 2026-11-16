@@ -1,0 +1,28 @@
+@if (store.ocupado()) {
+  <mat-progress-bar mode="indeterminate" class="progreso" />
+}
+
+<section class="conexiones" aria-labelledby="titulo-conexiones">
+  <div class="titulo">
+    <h2 id="titulo-conexiones">Conexiones</h2>
+    <button mat-flat-button type="button" class="leer-todas" (click)="recoleccion.lanzar(null)"
+      [disabled]="recoleccion.ocupada() || !hayLecturas()">
+      <mat-icon fontIcon="sync" />Leer todas ahora
+    </button>
+    <p class="ayuda">
+      La lectura programada lee cada conexión una vez al día; puedes volver a leerlas ahora mientras les queden
+      lecturas hoy. Una conexión pausada no se lee hasta reanudarla. Una que falla o bloquea no cuenta como día sin
+      ofertas.
+    </p>
+  </div>
+  @if (motivoBloqueo(); as motivo) {
+    <p class="motivo" role="status">{{ motivo }}</p>
+  }
+  @if (recoleccion.recoleccion(); as actual) {
+    @if (actual.estado !== 'NINGUNA') {
+      <app-recoleccion-avance [recoleccion]="actual" />
+    }
+  }
+  <app-fuentes-estado [fuentes]="store.conexiones()" [ocupada]="recoleccion.ocupada()" [guardando]="store.ocupado()"
+    (leer)="recoleccion.lanzar($event)" (pausar)="store.pausar($event)" (reanudar)="store.reanudar($event)" />
+</section>

@@ -1,0 +1,47 @@
+:host {
+  display: block;
+  container-type: inline-size;
+}
+
+// No ocupa alto: así no empuja las tarjetas cuando aparece.
+.progreso {
+  position: sticky;
+  top: 64px;
+  z-index: 1;
+  margin: 0 -16px -4px;
+  width: auto;
+}
+
+.conexiones {
+  display: grid;
+  gap: 12px;
+}
+
+.titulo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 16px;
+
+  h2 {
+    font: var(--mat-sys-title-medium);
+  }
+}
+
+// El botón general queda junto al título; la ayuda baja a su propia fila.
+.leer-todas {
+  margin-left: auto;
+}
+
+.ayuda {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-small);
+}
+
+.motivo {
+  margin: 0;
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-on-surface-variant);
+}

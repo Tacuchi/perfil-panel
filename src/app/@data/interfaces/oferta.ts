@@ -37,18 +37,6 @@ export interface IOfertaDetalle {
   correoContacto: string | null;
 }
 
-export interface IFuente {
-  fuente: Fuente;
-  nombre: string;
-  estado: EstadoLectura;
-  detalle: string | null;
-  ultimaLectura: string | null;
-  ultimaCorrecta: string | null;
-  ofertasLeidas: number;
-  /** Lecturas que le quedan hoy (día de Lima), contando programadas y a demanda. */
-  lecturasRestantes: number;
-}
-
 export interface ITecnologias {
   principales: string[];
   secundarias: string[];

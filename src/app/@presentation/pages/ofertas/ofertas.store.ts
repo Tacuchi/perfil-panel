@@ -1,12 +1,11 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Observable, finalize, tap } from 'rxjs';
-import { IFiltroOfertas, IFuente, IOferta, ITecnologias } from '../../../@data/interfaces/oferta';
+import { IFiltroOfertas, IOferta, ITecnologias } from '../../../@data/interfaces/oferta';
 import { OfertasService } from '../../../@data/services/ofertas.service';
 import { filtroPorDefecto } from '../../../Utils/const';
 
 interface OfertasState {
   ofertas: IOferta[];
-  fuentes: IFuente[];
   tecnologias: ITecnologias;
   filtro: IFiltroOfertas;
   ocupado: boolean;
@@ -23,7 +22,6 @@ export class OfertasStore {
 
   private readonly state = signal<OfertasState>({
     ofertas: [],
-    fuentes: [],
     tecnologias: { principales: [], secundarias: [] },
     filtro: filtroPorDefecto(),
     ocupado: false,
@@ -31,23 +29,15 @@ export class OfertasStore {
   });
 
   readonly ofertas = computed(() => this.state().ofertas);
-  readonly fuentes = computed(() => this.state().fuentes);
   readonly tecnologias = computed(() => this.state().tecnologias);
   readonly filtro = computed(() => this.state().filtro);
   readonly ocupado = computed(() => this.state().ocupado);
   readonly cargado = computed(() => this.state().cargado);
 
   cargar(): void {
-    this.ejecutar(this.servicio.fuentes().pipe(tap((fuentes) => this.state.update((s) => ({ ...s, fuentes })))));
     this.ejecutar(
       this.servicio.tecnologias().pipe(tap((tecnologias) => this.state.update((s) => ({ ...s, tecnologias })))),
     );
-    this.buscar();
-  }
-
-  /** Tras una recolección: fuentes y lista con lo recién leído, con el mismo filtro. */
-  refrescar(): void {
-    this.ejecutar(this.servicio.fuentes().pipe(tap((fuentes) => this.state.update((s) => ({ ...s, fuentes })))));
     this.buscar();
   }
 
