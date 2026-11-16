@@ -1148,3 +1148,97 @@ export const FUENTES_PENDIENTE_MAQUINA: IConexion[] = [
     "avisosPorCorrida": 25
   }
 ];
+
+/** LinkedIn y Bumeran leídas hoy desde la máquina: a Bumeran le quedan 2 de sus 3 lecturas. */
+export const FUENTES_CON_BUMERAN: IConexion[] = [
+  {
+    "fuente": "GET_ON_BOARD",
+    "nombre": "Get on Board",
+    "estado": "SIN_LEER",
+    "detalle": null,
+    "ultimaLectura": null,
+    "ultimaCorrecta": null,
+    "ofertasLeidas": 0,
+    "lecturasRestantes": 3,
+    "via": "SERVIDOR",
+    "necesita": "NADA",
+    "tieneLoQueNecesita": true,
+    "pausada": false,
+    "motivoPausa": null,
+    "estadoConexion": "LISTA",
+    "lecturasDia": 3,
+    "avisosPorCorrida": null
+  },
+  {
+    "fuente": "REMOTIVE",
+    "nombre": "Remotive",
+    "estado": "SIN_LEER",
+    "detalle": null,
+    "ultimaLectura": null,
+    "ultimaCorrecta": null,
+    "ofertasLeidas": 0,
+    "lecturasRestantes": 3,
+    "via": "SERVIDOR",
+    "necesita": "NADA",
+    "tieneLoQueNecesita": true,
+    "pausada": false,
+    "motivoPausa": null,
+    "estadoConexion": "LISTA",
+    "lecturasDia": 3,
+    "avisosPorCorrida": null
+  },
+  {
+    "fuente": "REMOTE_OK",
+    "nombre": "Remote OK",
+    "estado": "SIN_LEER",
+    "detalle": null,
+    "ultimaLectura": null,
+    "ultimaCorrecta": null,
+    "ofertasLeidas": 0,
+    "lecturasRestantes": 3,
+    "via": "SERVIDOR",
+    "necesita": "NADA",
+    "tieneLoQueNecesita": true,
+    "pausada": false,
+    "motivoPausa": null,
+    "estadoConexion": "LISTA",
+    "lecturasDia": 3,
+    "avisosPorCorrida": null
+  },
+  {
+    "fuente": "LINKEDIN",
+    "nombre": "LinkedIn",
+    "estado": "CORRECTA",
+    "detalle": null,
+    "ultimaLectura": "2026-11-16T03:15:05.996825Z",
+    "ultimaCorrecta": "2026-11-16T03:15:05.996825Z",
+    "ofertasLeidas": 5,
+    "lecturasRestantes": 0,
+    "via": "MAQUINA",
+    "necesita": "SESION",
+    "tieneLoQueNecesita": true,
+    "pausada": false,
+    "motivoPausa": null,
+    "estadoConexion": "LISTA",
+    "lecturasDia": 1,
+    "avisosPorCorrida": 25
+  },
+  {
+    "fuente": "BUMERAN",
+    "nombre": "Bumeran",
+    "estado": "CORRECTA",
+    "detalle": null,
+    "ultimaLectura": "2026-11-16T03:14:59.903730Z",
+    "ultimaCorrecta": "2026-11-16T03:14:59.903730Z",
+    "ofertasLeidas": 5,
+    "lecturasRestantes": 2,
+    "via": "MAQUINA",
+    "necesita": "NADA",
+    "tieneLoQueNecesita": true,
+    "pausada": false,
+    "motivoPausa": null,
+    "estadoConexion": "LISTA",
+    "lecturasDia": 3,
+    "avisosPorCorrida": 25
+  }
+];

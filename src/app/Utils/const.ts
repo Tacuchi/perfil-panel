@@ -32,6 +32,7 @@ export const FUENTES: readonly { valor: Fuente; etiqueta: string }[] = [
   { valor: 'REMOTIVE', etiqueta: 'Remotive' },
   { valor: 'REMOTE_OK', etiqueta: 'Remote OK' },
   { valor: 'LINKEDIN', etiqueta: 'LinkedIn' },
+  { valor: 'BUMERAN', etiqueta: 'Bumeran' },
 ];
 
 export const MODALIDADES: readonly { valor: Modalidad; etiqueta: string }[] = [

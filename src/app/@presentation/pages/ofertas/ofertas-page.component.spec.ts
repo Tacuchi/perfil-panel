@@ -120,6 +120,13 @@ describe('OfertasPageComponent', () => {
     );
   });
 
+  it('filtra por Bumeran', async () => {
+    await responderInicio([]);
+    const url = await filtrarYAplicar({ fuente: ['BUMERAN'] });
+    expect(url).toContain('fuente=BUMERAN');
+    expect(pantalla().querySelector('mat-chip-set')?.textContent).toContain('Fuente: Bumeran');
+  });
+
   it('restablecer vuelve a la lista por defecto', async () => {
     await responderInicio([]);
     await filtrarYAplicar({ encaje: ['NO_ENCAJA'], fuente: ['REMOTIVE'] });

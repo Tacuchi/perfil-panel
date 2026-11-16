@@ -8,6 +8,7 @@ import { ConexionesPageComponent } from './conexiones-page.component';
 import { ABRIR_ENLACE } from './recoleccion.store';
 import {
   CORRIDA_MAQUINA_ABIERTA,
+  FUENTES_CON_BUMERAN,
   FUENTES_CON_MAQUINA,
   FUENTES_PAUSADA_VERIFICACION,
   FUENTES_PENDIENTE_MAQUINA,
@@ -138,6 +139,14 @@ describe('Conexiones de la máquina', () => {
     expect(texto(`${tarjeta('LINKEDIN')} .conexion`)).toBe('Pausada: el sitio pidió una verificación');
     expect(texto(`${tarjeta('LINKEDIN')} .pausa`)).toContain('Reanudar');
     expect(boton('.leer-maquina')!.disabled).toBe(true);
+  });
+
+  it('Bumeran se lee desde tu máquina sin necesitar nada, con 3 lecturas al día y sin botón Leer del servidor', () => {
+    abrir(RECOLECCION_NINGUNA, FUENTES_CON_BUMERAN);
+    expect(texto(`${tarjeta('BUMERAN')} .via`)).toBe('Se lee desde tu máquina · No necesita nada');
+    expect(texto(`${tarjeta('BUMERAN')} .restantes`)).toContain('3 lecturas al día · hasta 25 avisos por corrida');
+    expect(pantalla().querySelector(`${tarjeta('BUMERAN')} .leer`)).toBeNull();
+    expect(boton('.leer-maquina')!.disabled).toBe(false);
   });
 
   it('la programada omite LinkedIn y lo dice', () => {
