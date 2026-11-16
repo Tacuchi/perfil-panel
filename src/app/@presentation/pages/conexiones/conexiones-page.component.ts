@@ -25,9 +25,14 @@ export class ConexionesPageComponent implements OnInit, OnDestroy {
     const conexiones = this.store.conexiones();
     return (
       conexiones.length === 0 ||
-      conexiones.some((c) => c.via !== 'MAQUINA' && c.estadoConexion === 'LISTA' && c.lecturasRestantes > 0)
+      conexiones.some(
+        (c) => c.via !== 'MAQUINA' && c.estadoConexion === 'LISTA' && (c.via === 'PAGO' || c.lecturasRestantes > 0),
+      )
     );
   });
+
+  /** Las conexiones que se leen por un servicio de pago. */
+  protected readonly dePago = computed(() => this.store.conexiones().filter((c) => c.via === 'PAGO'));
 
   /** Las conexiones que se leen desde la máquina de la persona. */
   protected readonly deMaquina = computed(() => this.store.conexiones().filter((c) => c.via === 'MAQUINA'));
@@ -47,7 +52,11 @@ export class ConexionesPageComponent implements OnInit, OnDestroy {
     if (this.hayLecturas()) {
       return null;
     }
-    const todasListas = this.store.conexiones().filter((c) => c.via !== 'MAQUINA').every((c) => c.estadoConexion === 'LISTA');
+    // Una de pago que nunca se configuró no cuenta: con las demás en su tope, el motivo sigue siendo el tope.
+    const todasListas = this.store
+      .conexiones()
+      .filter((c) => c.via !== 'MAQUINA' && c.estadoConexion !== 'FALTA_CONFIGURAR')
+      .every((c) => c.estadoConexion === 'LISTA');
     return todasListas ? MSG_TODAS_EN_TOPE : MSG_NINGUNA_LEIBLE;
   });
 

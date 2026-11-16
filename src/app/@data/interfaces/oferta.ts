@@ -1,7 +1,7 @@
 /** Ofertas como las entrega perfil-api. */
 export type Encaje = 'ALTO' | 'MEDIO' | 'NO_ENCAJA';
 export type EstadoOferta = 'NUEVA' | 'GUARDADA' | 'DESCARTADA' | 'POSTULADA';
-export type Fuente = 'GET_ON_BOARD' | 'REMOTIVE' | 'REMOTE_OK' | 'LINKEDIN' | 'BUMERAN';
+export type Fuente = 'GET_ON_BOARD' | 'REMOTIVE' | 'REMOTE_OK' | 'LINKEDIN' | 'BUMERAN' | 'COMPUTRABAJO';
 export type Modalidad = 'REMOTO' | 'HIBRIDO' | 'PRESENCIAL' | 'NO_INFORMA';
 export type EstadoLectura = 'CORRECTA' | 'FALLO' | 'BLOQUEO' | 'SIN_LEER';
 

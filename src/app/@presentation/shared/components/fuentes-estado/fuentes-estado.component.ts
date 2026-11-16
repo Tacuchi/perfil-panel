@@ -5,15 +5,17 @@ import { MatIcon } from '@angular/material/icon';
 import { IConexion } from '../../../../@data/interfaces/conexion';
 import { EstadoLectura, Fuente } from '../../../../@data/interfaces/oferta';
 import { ESTADOS_CONEXION, ESTADOS_LECTURA, MSG_FUENTE_EN_TOPE, REQUISITOS, VIAS } from '../../../../Utils/const';
+import { ConexionPagoComponent } from '../conexion-pago/conexion-pago.component';
 
 /**
  * Una tarjeta por conexión: desde dónde se lee, lo que necesita, el resultado de su última lectura, las lecturas que
  * le quedan hoy, su botón para leerla ahora y el de pausarla o reanudarla. Una fuente que falló o bloqueó se ve como
- * tal, nunca como un día sin ofertas; una pausada o sin configurar no se puede leer.
+ * tal, nunca como un día sin ofertas; una pausada o sin configurar no se puede leer. Las de pago muestran además su
+ * clave, su tope mensual y su consumo, en lugar de las lecturas del día.
  */
 @Component({
   selector: 'app-fuentes-estado',
-  imports: [DatePipe, MatButton, MatIcon],
+  imports: [DatePipe, MatButton, MatIcon, ConexionPagoComponent],
   templateUrl: './fuentes-estado.component.html',
   styleUrl: './fuentes-estado.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,6 +29,8 @@ export class FuentesEstadoComponent {
   readonly leer = output<Fuente>();
   readonly pausar = output<Fuente>();
   readonly reanudar = output<Fuente>();
+  readonly guardarClave = output<{ fuente: Fuente; clave: string }>();
+  readonly guardarTope = output<{ fuente: Fuente; tope: number }>();
 
   protected readonly msgEnTope = MSG_FUENTE_EN_TOPE;
 
@@ -45,7 +49,8 @@ export class FuentesEstadoComponent {
     return fuente.estado === 'FALLO' || fuente.estado === 'BLOQUEO';
   }
 
+  /** Las de pago no tienen tope diario: las acota su tope mensual, que la API ya refleja en su estado. */
   protected sePuedeLeer(fuente: IConexion): boolean {
-    return fuente.estadoConexion === 'LISTA' && fuente.lecturasRestantes > 0;
+    return fuente.estadoConexion === 'LISTA' && (fuente.via === 'PAGO' || fuente.lecturasRestantes > 0);
   }
 }

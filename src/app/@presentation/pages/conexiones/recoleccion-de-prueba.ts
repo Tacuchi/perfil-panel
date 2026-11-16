@@ -311,7 +311,12 @@ export const FUENTES_SIN_LEER: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "REMOTIVE",
@@ -329,7 +334,12 @@ export const FUENTES_SIN_LEER: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "REMOTE_OK",
@@ -347,7 +357,12 @@ export const FUENTES_SIN_LEER: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   }
 ];
 
@@ -369,7 +384,12 @@ export const FUENTES_EN_TOPE: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "REMOTIVE",
@@ -387,7 +407,12 @@ export const FUENTES_EN_TOPE: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "REMOTE_OK",
@@ -405,7 +430,12 @@ export const FUENTES_EN_TOPE: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   }
 ];
 
@@ -427,7 +457,12 @@ export const FUENTES_CON_PAUSADA: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "REMOTIVE",
@@ -445,7 +480,12 @@ export const FUENTES_CON_PAUSADA: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "PAUSADA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "REMOTE_OK",
@@ -463,7 +503,12 @@ export const FUENTES_CON_PAUSADA: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   }
 ];
 
@@ -484,7 +529,12 @@ export const CONEXION_PAUSADA: IConexion = {
   "motivoPausa": null,
   "estadoConexion": "PAUSADA",
   "lecturasDia": 3,
-  "avisosPorCorrida": null
+  "avisosPorCorrida": null,
+  "tieneClave": false,
+  "claveCargadaEn": null,
+  "topeMensual": null,
+  "consumoMes": null,
+  "queFalta": null
 };
 
 /** Respuesta de reanudar Remotive. */
@@ -504,7 +554,12 @@ export const CONEXION_REANUDADA: IConexion = {
   "motivoPausa": null,
   "estadoConexion": "LISTA",
   "lecturasDia": 3,
-  "avisosPorCorrida": null
+  "avisosPorCorrida": null,
+  "tieneClave": false,
+  "claveCargadaEn": null,
+  "topeMensual": null,
+  "consumoMes": null,
+  "queFalta": null
 };
 
 /** Lanzamiento general con Remotive pausada: la omite con su motivo. */
@@ -557,18 +612,21 @@ export const FUENTES_DE_PRUEBA: IConexion[] = [
     ultimaLectura: '2026-11-15T12:00:00Z', ultimaCorrecta: '2026-11-15T12:00:00Z', ofertasLeidas: 40, lecturasRestantes: 2,
     via: 'SERVIDOR', necesita: 'NADA', tieneLoQueNecesita: true, pausada: false, motivoPausa: null, estadoConexion: 'LISTA',
     lecturasDia: 3, avisosPorCorrida: null,
+    tieneClave: false, claveCargadaEn: null, topeMensual: null, consumoMes: null, queFalta: null,
   },
   {
     fuente: 'REMOTIVE', nombre: 'Remotive', estado: 'SIN_LEER', detalle: null,
     ultimaLectura: null, ultimaCorrecta: null, ofertasLeidas: 0, lecturasRestantes: 3,
     via: 'SERVIDOR', necesita: 'NADA', tieneLoQueNecesita: true, pausada: false, motivoPausa: null, estadoConexion: 'LISTA',
     lecturasDia: 3, avisosPorCorrida: null,
+    tieneClave: false, claveCargadaEn: null, topeMensual: null, consumoMes: null, queFalta: null,
   },
   {
     fuente: 'REMOTE_OK', nombre: 'Remote OK', estado: 'BLOQUEO', detalle: 'el sitio rechazó la lectura (HTTP 403)',
     ultimaLectura: '2026-11-15T12:00:00Z', ultimaCorrecta: '2026-11-14T12:00:00Z', ofertasLeidas: 0, lecturasRestantes: 1,
     via: 'SERVIDOR', necesita: 'NADA', tieneLoQueNecesita: true, pausada: false, motivoPausa: null, estadoConexion: 'LISTA',
     lecturasDia: 3, avisosPorCorrida: null,
+    tieneClave: false, claveCargadaEn: null, topeMensual: null, consumoMes: null, queFalta: null,
   },
 ];
 
@@ -590,7 +648,12 @@ export const FUENTES_TODAS_PAUSADAS: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "PAUSADA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "REMOTIVE",
@@ -608,7 +671,12 @@ export const FUENTES_TODAS_PAUSADAS: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "PAUSADA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "REMOTE_OK",
@@ -626,7 +694,12 @@ export const FUENTES_TODAS_PAUSADAS: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "PAUSADA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   }
 ];
 
@@ -650,7 +723,12 @@ export const FUENTES_CON_MAQUINA: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "REMOTIVE",
@@ -668,7 +746,12 @@ export const FUENTES_CON_MAQUINA: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "REMOTE_OK",
@@ -686,7 +769,12 @@ export const FUENTES_CON_MAQUINA: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "LINKEDIN",
@@ -704,7 +792,12 @@ export const FUENTES_CON_MAQUINA: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "FALTA_INICIAR_SESION",
     "lecturasDia": 1,
-    "avisosPorCorrida": 25
+    "avisosPorCorrida": 25,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   }
 ];
 
@@ -792,7 +885,12 @@ export const FUENTES_TRAS_SIN_RESPUESTA: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "REMOTIVE",
@@ -810,7 +908,12 @@ export const FUENTES_TRAS_SIN_RESPUESTA: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "REMOTE_OK",
@@ -828,7 +931,12 @@ export const FUENTES_TRAS_SIN_RESPUESTA: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "LINKEDIN",
@@ -846,7 +954,12 @@ export const FUENTES_TRAS_SIN_RESPUESTA: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "FALTA_INICIAR_SESION",
     "lecturasDia": 1,
-    "avisosPorCorrida": 25
+    "avisosPorCorrida": 25,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   }
 ];
 
@@ -889,7 +1002,12 @@ export const FUENTES_TRAS_LECTURA_MAQUINA: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "REMOTIVE",
@@ -907,7 +1025,12 @@ export const FUENTES_TRAS_LECTURA_MAQUINA: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "REMOTE_OK",
@@ -925,7 +1048,12 @@ export const FUENTES_TRAS_LECTURA_MAQUINA: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "LINKEDIN",
@@ -943,7 +1071,12 @@ export const FUENTES_TRAS_LECTURA_MAQUINA: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 1,
-    "avisosPorCorrida": 25
+    "avisosPorCorrida": 25,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   }
 ];
 
@@ -1015,7 +1148,12 @@ export const FUENTES_PAUSADA_VERIFICACION: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "REMOTIVE",
@@ -1033,7 +1171,12 @@ export const FUENTES_PAUSADA_VERIFICACION: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "REMOTE_OK",
@@ -1051,7 +1194,12 @@ export const FUENTES_PAUSADA_VERIFICACION: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "LINKEDIN",
@@ -1069,7 +1217,12 @@ export const FUENTES_PAUSADA_VERIFICACION: IConexion[] = [
     "motivoPausa": "el sitio pidió una verificación",
     "estadoConexion": "PAUSADA",
     "lecturasDia": 1,
-    "avisosPorCorrida": 25
+    "avisosPorCorrida": 25,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   }
 ];
 
@@ -1091,7 +1244,12 @@ export const FUENTES_PENDIENTE_MAQUINA: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "REMOTIVE",
@@ -1109,7 +1267,12 @@ export const FUENTES_PENDIENTE_MAQUINA: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "REMOTE_OK",
@@ -1127,7 +1290,12 @@ export const FUENTES_PENDIENTE_MAQUINA: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "LINKEDIN",
@@ -1145,7 +1313,12 @@ export const FUENTES_PENDIENTE_MAQUINA: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "PENDIENTE_MAQUINA",
     "lecturasDia": 1,
-    "avisosPorCorrida": 25
+    "avisosPorCorrida": 25,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   }
 ];
 
@@ -1167,7 +1340,12 @@ export const FUENTES_CON_BUMERAN: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "REMOTIVE",
@@ -1185,7 +1363,12 @@ export const FUENTES_CON_BUMERAN: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "REMOTE_OK",
@@ -1203,7 +1386,12 @@ export const FUENTES_CON_BUMERAN: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": null
+    "avisosPorCorrida": null,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "LINKEDIN",
@@ -1221,7 +1409,12 @@ export const FUENTES_CON_BUMERAN: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 1,
-    "avisosPorCorrida": 25
+    "avisosPorCorrida": 25,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   },
   {
     "fuente": "BUMERAN",
@@ -1239,6 +1432,11 @@ export const FUENTES_CON_BUMERAN: IConexion[] = [
     "motivoPausa": null,
     "estadoConexion": "LISTA",
     "lecturasDia": 3,
-    "avisosPorCorrida": 25
+    "avisosPorCorrida": 25,
+    "tieneClave": false,
+    "claveCargadaEn": null,
+    "topeMensual": null,
+    "consumoMes": null,
+    "queFalta": null
   }
 ];

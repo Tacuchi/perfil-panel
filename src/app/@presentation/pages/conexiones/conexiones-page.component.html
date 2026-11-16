@@ -16,10 +16,15 @@
       </button>
     }
     <p class="ayuda">
-      La lectura programada lee cada conexión una vez al día; puedes volver a leerlas ahora mientras les queden
-      lecturas hoy. Una conexión pausada no se lee hasta reanudarla. Una que falla o bloquea no cuenta como día sin
-      ofertas.
+      Nada se lee solo: cada lectura la lanzas tú, con «Leer» o «Leer todas ahora», mientras les queden lecturas hoy.
+      Una conexión pausada no se lee hasta reanudarla. Una que falla o bloquea no cuenta como día sin ofertas.
     </p>
+    @if (dePago().length > 0) {
+      <p class="ayuda">
+        Las conexiones de pago necesitan su clave y un tope mensual de gasto. Al llegar al tope no se leen hasta el mes
+        siguiente o hasta que lo subas.
+      </p>
+    }
     @if (deMaquina().length > 0) {
       <p class="ayuda">
         Las conexiones de tu máquina solo se leen con «Leer desde mi máquina», que abre el lector instalado en esta Mac.
@@ -38,5 +43,7 @@
     }
   }
   <app-fuentes-estado [fuentes]="store.conexiones()" [ocupada]="recoleccion.ocupada()" [guardando]="store.ocupado()"
-    (leer)="recoleccion.lanzar($event)" (pausar)="store.pausar($event)" (reanudar)="store.reanudar($event)" />
+    (leer)="recoleccion.lanzar($event)" (pausar)="store.pausar($event)" (reanudar)="store.reanudar($event)"
+    (guardarClave)="store.cargarClave($event.fuente, $event.clave)"
+    (guardarTope)="store.fijarTope($event.fuente, $event.tope)" />
 </section>

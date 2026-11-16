@@ -10,7 +10,7 @@
       <span class="via">{{ vias[fuente.via] }} · {{ requisitos[fuente.necesita] }}</span>
       @if (fuente.estadoConexion !== 'LISTA') {
         <span class="conexion">
-          {{ estadosConexion[fuente.estadoConexion] }}@if (fuente.motivoPausa) {: {{ fuente.motivoPausa }}}
+          {{ estadosConexion[fuente.estadoConexion] }}@if (fuente.motivoPausa) {: {{ fuente.motivoPausa }}} @else if (fuente.queFalta) {: {{ fuente.queFalta }}}
         </span>
       }
       <span class="estado">{{ estados[fuente.estado] }}</span>
@@ -25,16 +25,25 @@
       @if (conProblema(fuente) && fuente.detalle) {
         <span class="detalle">{{ fuente.detalle }}</span>
       }
+      @if (fuente.via === 'PAGO') {
+        <app-conexion-pago [conexion]="fuente" [guardando]="guardando()"
+          (guardarClave)="guardarClave.emit({ fuente: fuente.fuente, clave: $event })"
+          (guardarTope)="guardarTope.emit({ fuente: fuente.fuente, tope: $event })" />
+      }
       <div class="lectura">
         <span class="restantes">
-          @if (fuente.avisosPorCorrida) {
-            {{ fuente.lecturasDia === 1 ? '1 lectura al día' : fuente.lecturasDia + ' lecturas al día' }} · hasta
-            {{ fuente.avisosPorCorrida }} avisos por corrida ·
-          }
-          @if (fuente.lecturasRestantes > 0) {
-            {{ fuente.lecturasRestantes === 1 ? 'Le queda 1 lectura hoy' : 'Le quedan ' + fuente.lecturasRestantes + ' lecturas hoy' }}
+          @if (fuente.via === 'PAGO') {
+            Sin tope diario: la acota su tope mensual
           } @else {
-            {{ msgEnTope }}
+            @if (fuente.avisosPorCorrida) {
+              {{ fuente.lecturasDia === 1 ? '1 lectura al día' : fuente.lecturasDia + ' lecturas al día' }} · hasta
+              {{ fuente.avisosPorCorrida }} avisos por corrida ·
+            }
+            @if (fuente.lecturasRestantes > 0) {
+              {{ fuente.lecturasRestantes === 1 ? 'Le queda 1 lectura hoy' : 'Le quedan ' + fuente.lecturasRestantes + ' lecturas hoy' }}
+            } @else {
+              {{ msgEnTope }}
+            }
           }
         </span>
         @if (fuente.pausada) {

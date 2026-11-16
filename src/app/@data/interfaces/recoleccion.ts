@@ -4,7 +4,7 @@ import { EstadoLectura, Fuente } from './oferta';
 export type EstadoRecoleccion = 'NINGUNA' | 'EN_CURSO' | 'TERMINADA';
 export type OrigenRecoleccion = 'PROGRAMADA' | 'DEMANDA' | 'MAQUINA';
 export type PasoFuente = 'PENDIENTE' | 'LEYENDO' | 'TERMINADA';
-export type MotivoOmision = 'TOPE_DIARIO' | 'PAUSADA' | 'DESDE_MAQUINA';
+export type MotivoOmision = 'TOPE_DIARIO' | 'PAUSADA' | 'DESDE_MAQUINA' | 'FALTA_CONFIGURAR' | 'TOPE_MENSUAL';
 /** Por qué una corrida de la máquina se cerró sin que el lector la terminara. */
 export type MotivoCierre = 'LECTOR_SIN_RESPUESTA' | 'PLAZO_VENCIDO';
 

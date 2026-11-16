@@ -3,6 +3,8 @@ import { Observable, finalize } from 'rxjs';
 import { IConexion } from '../../../@data/interfaces/conexion';
 import { Fuente } from '../../../@data/interfaces/oferta';
 import { ConexionesService } from '../../../@data/services/conexiones.service';
+import { ToastService } from '../../../@data/services/toast.service';
+import { MSG_CLAVE_GUARDADA, MSG_TOPE_GUARDADO } from '../../../Utils/const';
 
 interface ConexionesState {
   conexiones: IConexion[];
@@ -13,6 +15,7 @@ interface ConexionesState {
 @Injectable({ providedIn: 'root' })
 export class ConexionesStore {
   private readonly servicio = inject(ConexionesService);
+  private readonly toast = inject(ToastService);
 
   private readonly state = signal<ConexionesState>({ conexiones: [], ocupado: false });
 
@@ -29,6 +32,20 @@ export class ConexionesStore {
 
   reanudar(fuente: Fuente): void {
     this.ejecutar(this.servicio.reanudar(fuente), (conexion) => this.reemplazar(conexion));
+  }
+
+  cargarClave(fuente: Fuente, clave: string): void {
+    this.ejecutar(this.servicio.cargarClave(fuente, clave), (conexion) => {
+      this.reemplazar(conexion);
+      this.toast.exito(MSG_CLAVE_GUARDADA);
+    });
+  }
+
+  fijarTope(fuente: Fuente, tope: number): void {
+    this.ejecutar(this.servicio.fijarTope(fuente, tope), (conexion) => {
+      this.reemplazar(conexion);
+      this.toast.exito(MSG_TOPE_GUARDADO);
+    });
   }
 
   private reemplazar(conexion: IConexion): void {

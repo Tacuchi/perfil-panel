@@ -33,6 +33,7 @@ export const FUENTES: readonly { valor: Fuente; etiqueta: string }[] = [
   { valor: 'REMOTE_OK', etiqueta: 'Remote OK' },
   { valor: 'LINKEDIN', etiqueta: 'LinkedIn' },
   { valor: 'BUMERAN', etiqueta: 'Bumeran' },
+  { valor: 'COMPUTRABAJO', etiqueta: 'Computrabajo' },
 ];
 
 export const MODALIDADES: readonly { valor: Modalidad; etiqueta: string }[] = [
@@ -76,6 +77,7 @@ export const ESTADOS_CONEXION: Readonly<Record<EstadoConexion, string>> = {
   FALTA_CONFIGURAR: 'Falta configurar',
   FALTA_INICIAR_SESION: 'Falta iniciar sesión',
   PENDIENTE_MAQUINA: 'Pendiente de leer desde tu máquina',
+  TOPE_MENSUAL: 'Llegó a su tope del mes',
 };
 
 export const ORIGENES_RECOLECCION: Readonly<Record<OrigenRecoleccion, string>> = {
@@ -88,7 +90,17 @@ export const MOTIVOS_OMISION: Readonly<Record<MotivoOmision, string>> = {
   TOPE_DIARIO: 'No leída: llegó a su tope de lecturas de hoy',
   PAUSADA: 'No leída: está pausada',
   DESDE_MAQUINA: 'No leída: se lee desde tu máquina',
+  FALTA_CONFIGURAR: 'No leída: falta configurarla',
+  TOPE_MENSUAL: 'No leída: llegó a su tope del mes',
 };
+
+export const MSG_CLAVE_GUARDADA = 'Clave guardada. Ya no se vuelve a mostrar.';
+export const MSG_TOPE_GUARDADO = 'Tope mensual guardado.';
+
+/** Montos en dólares como los cobra el servicio de pago: hasta tres decimales. */
+export function dolares(monto: number): string {
+  return `US$ ${monto.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 3 })}`;
+}
 
 export const MOTIVOS_CIERRE: Readonly<Record<MotivoCierre, string>> = {
   LECTOR_SIN_RESPUESTA: 'El lector no respondió en esta máquina.',

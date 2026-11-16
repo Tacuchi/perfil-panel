@@ -5,7 +5,7 @@ import { IConexion } from '../interfaces/conexion';
 import { Fuente } from '../interfaces/oferta';
 import { ApiClientService } from './api-client.service';
 
-/** Estado de cada conexión del monitor, y pausarla o reanudarla. */
+/** Estado de cada conexión del monitor: pausarla o reanudarla, y la clave y el tope mensual de las de pago. */
 @Injectable({ providedIn: 'root' })
 export class ConexionesService {
   private readonly apiClient = inject(ApiClientService);
@@ -21,5 +21,14 @@ export class ConexionesService {
 
   reanudar(fuente: Fuente): Observable<IConexion> {
     return this.apiClient.post<IConexion>(`${this.base}/${fuente}/reanudar`, null);
+  }
+
+  /** Carga o reemplaza la clave; la respuesta solo dice que existe y cuándo se cargó. */
+  cargarClave(fuente: Fuente, clave: string): Observable<IConexion> {
+    return this.apiClient.put<IConexion>(`${this.base}/${fuente}/clave`, { clave });
+  }
+
+  fijarTope(fuente: Fuente, topeMensual: number): Observable<IConexion> {
+    return this.apiClient.put<IConexion>(`${this.base}/${fuente}/tope`, { topeMensual });
   }
 }
