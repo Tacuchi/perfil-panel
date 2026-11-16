@@ -128,6 +128,20 @@ describe('Conexiones de la máquina', () => {
     expect(pantalla().querySelector(`${tarjeta('REMOTIVE')} .leer`)).not.toBeNull();
   });
 
+  it('dice si LinkedIn tiene la sesión que necesita; Bumeran no necesita nada y no lo dice', () => {
+    abrir(RECOLECCION_NINGUNA, FUENTES_PENDIENTE_MAQUINA);
+    expect(texto(`${tarjeta('LINKEDIN')} .tiene`)).toBe('Tiene la sesión iniciada');
+    fixture.destroy();
+
+    abrir(RECOLECCION_NINGUNA, FUENTES_CON_MAQUINA);
+    expect(texto(`${tarjeta('LINKEDIN')} .tiene`)).toBe('Sin sesión iniciada');
+    fixture.destroy();
+
+    abrir(RECOLECCION_NINGUNA, FUENTES_CON_BUMERAN);
+    expect(pantalla().querySelector(`${tarjeta('BUMERAN')} .tiene`)).toBeNull();
+    expect(pantalla().querySelector(`${tarjeta('REMOTIVE')} .tiene`)).toBeNull();
+  });
+
   it('pendiente de leer desde tu máquina, con la fecha de su última lectura', () => {
     abrir(RECOLECCION_NINGUNA, FUENTES_PENDIENTE_MAQUINA);
     expect(texto(`${tarjeta('LINKEDIN')} .conexion`)).toBe('Pendiente de leer desde tu máquina');

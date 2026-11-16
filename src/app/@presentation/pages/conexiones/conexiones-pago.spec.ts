@@ -95,8 +95,20 @@ describe('Conexiones de pago', () => {
     expect(textoDe(enTarjeta('.clave'))).toContain('Tiene clave desde 16/11/2026');
     expect(textoDe(enTarjeta('.conexion'))).toBe('Falta configurar: falta el tope mensual');
     expect(textoDe(enTarjeta('mat-label'))).toBe('Reemplazar la clave');
+    // Vacío tras guardar bien: el campo espera otra clave, no marca un error.
+    expect(enTarjeta('mat-form-field').classList).not.toContain('mat-form-field-invalid');
+    expect(campoClave().getAttribute('aria-invalid')).not.toBe('true');
     expect(pantalla().innerHTML).not.toContain('clave-de-prueba');
     expect(textoDe(document.querySelector('.cdk-overlay-container'))).toContain('Clave guardada');
+  });
+
+  it('dice si Computrabajo tiene lo que necesita: sin configurar hasta tener clave y tope', () => {
+    abrir(FUENTES_PAGO_SIN_CONFIGURAR);
+    expect(textoDe(enTarjeta('.tiene'))).toBe('Sin configurar');
+    fixture.destroy();
+
+    abrir(FUENTES_PAGO_LEIDA);
+    expect(textoDe(enTarjeta('.tiene'))).toBe('Configurada');
   });
 
   it('una clave en blanco no se envía', () => {

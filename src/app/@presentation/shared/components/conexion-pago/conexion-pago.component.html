@@ -14,7 +14,7 @@
       · sin tope mensual
     }
   </span>
-  <form class="campo" [formGroup]="formClave" (ngSubmit)="enviarClave()">
+  <form class="campo" [formGroup]="formClave" #envioClave="ngForm" (ngSubmit)="enviarClave()">
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
       <mat-label>{{ conexion().tieneClave ? 'Reemplazar la clave' : 'Clave del servicio' }}</mat-label>
       <input matInput type="password" formControlName="clave" autocomplete="off" spellcheck="false" />

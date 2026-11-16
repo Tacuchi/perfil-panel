@@ -4,11 +4,18 @@ import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { IConexion } from '../../../../@data/interfaces/conexion';
 import { EstadoLectura, Fuente } from '../../../../@data/interfaces/oferta';
-import { ESTADOS_CONEXION, ESTADOS_LECTURA, MSG_FUENTE_EN_TOPE, REQUISITOS, VIAS } from '../../../../Utils/const';
+import {
+  ESTADOS_CONEXION,
+  ESTADOS_LECTURA,
+  MSG_FUENTE_EN_TOPE,
+  REQUISITOS,
+  TIENE_LO_QUE_NECESITA,
+  VIAS,
+} from '../../../../Utils/const';
 import { ConexionPagoComponent } from '../conexion-pago/conexion-pago.component';
 
 /**
- * Una tarjeta por conexión: desde dónde se lee, lo que necesita, el resultado de su última lectura, las lecturas que
+ * Una tarjeta por conexión: desde dónde se lee, lo que necesita y si lo tiene, el resultado de su última lectura, las lecturas que
  * le quedan hoy, su botón para leerla ahora y el de pausarla o reanudarla. Una fuente que falló o bloqueó se ve como
  * tal, nunca como un día sin ofertas; una pausada o sin configurar no se puede leer. Las de pago muestran además su
  * clave, su tope mensual y su consumo, en lugar de las lecturas del día.
@@ -44,6 +51,15 @@ export class FuentesEstadoComponent {
     BLOQUEO: 'block',
     SIN_LEER: 'schedule',
   };
+
+  /** Si tiene lo que necesita, o null si no necesita nada. */
+  protected tiene(fuente: IConexion): string | null {
+    if (fuente.necesita === 'NADA') {
+      return null;
+    }
+    const textos = TIENE_LO_QUE_NECESITA[fuente.necesita];
+    return fuente.tieneLoQueNecesita ? textos.si : textos.no;
+  }
 
   protected conProblema(fuente: IConexion): boolean {
     return fuente.estado === 'FALLO' || fuente.estado === 'BLOQUEO';

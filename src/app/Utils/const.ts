@@ -70,6 +70,12 @@ export const REQUISITOS: Readonly<Record<Requisito, string>> = {
   SESION: 'Necesita tu sesión',
 };
 
+/** Si la conexión tiene lo que necesita; las que no necesitan nada no lo dicen. */
+export const TIENE_LO_QUE_NECESITA: Readonly<Record<Exclude<Requisito, 'NADA'>, { si: string; no: string }>> = {
+  CLAVE: { si: 'Configurada', no: 'Sin configurar' },
+  SESION: { si: 'Tiene la sesión iniciada', no: 'Sin sesión iniciada' },
+};
+
 /** Solo se muestran las que impiden leer; LISTA no lleva aviso. */
 export const ESTADOS_CONEXION: Readonly<Record<EstadoConexion, string>> = {
   LISTA: 'Lista',

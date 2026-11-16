@@ -8,6 +8,9 @@
         <mat-icon class="icono" [fontIcon]="iconos[fuente.estado]" aria-hidden="true" />
       </div>
       <span class="via">{{ vias[fuente.via] }} · {{ requisitos[fuente.necesita] }}</span>
+      @if (tiene(fuente); as tiene) {
+        <span class="tiene" [attr.data-tiene]="fuente.tieneLoQueNecesita">{{ tiene }}</span>
+      }
       @if (fuente.estadoConexion !== 'LISTA') {
         <span class="conexion">
           {{ estadosConexion[fuente.estadoConexion] }}@if (fuente.motivoPausa) {: {{ fuente.motivoPausa }}} @else if (fuente.queFalta) {: {{ fuente.queFalta }}}

@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, inject, input, output } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, effect, inject, input, output, viewChild } from '@angular/core';
+import { FormBuilder, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -28,6 +28,9 @@ export class ConexionPagoComponent {
   readonly guardarTope = output<number>();
 
   protected readonly dolares = dolares;
+
+  /** La directiva del formulario de la clave: solo ella olvida que se envió, para no pintar el campo vacío como error. */
+  private readonly envioClave = viewChild.required('envioClave', { read: FormGroupDirective });
 
   protected readonly formClave = this.fb.nonNullable.group({
     clave: ['', [Validators.required, Validators.maxLength(500), Validators.pattern(/\S/)]],
@@ -57,7 +60,7 @@ export class ConexionPagoComponent {
     }
     const clave = this.formClave.controls.clave.value.trim();
     // La clave no se queda en la pantalla: se vacía en cuanto sale hacia la API.
-    this.formClave.reset();
+    this.envioClave().resetForm();
     this.guardarClave.emit(clave);
   }
 
