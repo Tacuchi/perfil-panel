@@ -1,10 +1,20 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Injectable, InjectionToken, computed, inject, signal } from '@angular/core';
 import { Subscription, switchMap, timer } from 'rxjs';
 import { Fuente } from '../../../@data/interfaces/oferta';
 import { IRecoleccion } from '../../../@data/interfaces/recoleccion';
 import { RecoleccionService } from '../../../@data/services/recoleccion.service';
-import { INTERVALO_AVANCE_MS } from '../../../Utils/const';
+import { INTERVALO_AVANCE_MS, enlaceLector } from '../../../Utils/const';
 import { ConexionesStore } from './conexiones.store';
+
+/** Abre una dirección en el navegador; en las pruebas se reemplaza para ver qué enlace se intentó abrir. */
+export const ABRIR_ENLACE = new InjectionToken<(direccion: string) => void>('ABRIR_ENLACE', {
+  providedIn: 'root',
+  factory: () => {
+    const documento = inject(DOCUMENT);
+    return (direccion: string) => documento.location.assign(direccion);
+  },
+});
 
 interface RecoleccionState {
   recoleccion: IRecoleccion | null;
@@ -20,6 +30,7 @@ interface RecoleccionState {
 export class RecoleccionStore {
   private readonly servicio = inject(RecoleccionService);
   private readonly conexiones = inject(ConexionesStore);
+  private readonly abrirEnlace = inject(ABRIR_ENLACE);
 
   private readonly state = signal<RecoleccionState>({ recoleccion: null, lanzando: false });
   private consulta: Subscription | null = null;
@@ -50,6 +61,29 @@ export class RecoleccionStore {
         this.consultar(INTERVALO_AVANCE_MS);
       },
       // Rechazada (por ejemplo, otra en curso): el motivo ya se mostró; se trae lo que corre ahora.
+      error: () => {
+        this.state.update((s) => ({ ...s, lanzando: false }));
+        this.consultar(0);
+      },
+    });
+  }
+
+  /**
+   * Abre una corrida para el lector de la máquina y lanza el lector con su enlace. El código no se guarda: solo viaja
+   * en el enlace. El avance se sigue igual que el de las demás recolecciones; si el lector no se reporta, la API
+   * cierra la corrida con ese motivo y la barra lo muestra.
+   */
+  leerDesdeMaquina(): void {
+    if (this.ocupada()) {
+      return;
+    }
+    this.state.update((s) => ({ ...s, lanzando: true }));
+    this.servicio.abrirCorridaLocal().subscribe({
+      next: ({ codigo, avance }) => {
+        this.state.set({ recoleccion: avance, lanzando: false });
+        this.abrirEnlace(enlaceLector(codigo));
+        this.consultar(INTERVALO_AVANCE_MS);
+      },
       error: () => {
         this.state.update((s) => ({ ...s, lanzando: false }));
         this.consultar(0);

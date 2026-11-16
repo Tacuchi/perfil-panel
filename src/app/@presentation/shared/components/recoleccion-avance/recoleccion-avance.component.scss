@@ -13,6 +13,12 @@
   font: var(--mat-sys-title-small);
 }
 
+.cierre {
+  margin: 0;
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-error);
+}
+
 .pasos {
   display: flex;
   flex-wrap: wrap;

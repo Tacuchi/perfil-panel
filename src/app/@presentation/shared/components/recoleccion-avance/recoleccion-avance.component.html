@@ -8,6 +8,9 @@
       {{ recoleccion().fin | date: 'd/M/yyyy HH:mm' }}
     }
   </p>
+  @if (recoleccion().cierre; as cierre) {
+    <p class="cierre" [attr.data-cierre]="cierre">{{ cierres[cierre] }}</p>
+  }
   <mat-progress-bar mode="determinate" [value]="porcentaje()"
     [attr.aria-label]="'Fuentes terminadas: ' + recoleccion().terminadas + ' de ' + recoleccion().total" />
   <ul class="pasos">

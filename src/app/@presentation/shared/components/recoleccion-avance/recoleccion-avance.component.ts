@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { IFuenteEnRecoleccion, IRecoleccion } from '../../../../@data/interfaces/recoleccion';
-import { MOTIVOS_OMISION, ORIGENES_RECOLECCION, RESULTADOS_LECTURA } from '../../../../Utils/const';
+import { MOTIVOS_CIERRE, MOTIVOS_OMISION, ORIGENES_RECOLECCION, RESULTADOS_LECTURA } from '../../../../Utils/const';
 
 /**
  * Avance de la recolección en curso (barra sobre las fuentes lanzadas y paso de cada una) o resultado de la última.
@@ -21,6 +21,7 @@ export class RecoleccionAvanceComponent {
 
   protected readonly origenes = ORIGENES_RECOLECCION;
   protected readonly motivos = MOTIVOS_OMISION;
+  protected readonly cierres = MOTIVOS_CIERRE;
 
   protected readonly enCurso = computed(() => this.recoleccion().estado === 'EN_CURSO');
   protected readonly porcentaje = computed(() => {

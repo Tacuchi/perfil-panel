@@ -14,6 +14,9 @@
         </span>
       }
       <span class="estado">{{ estados[fuente.estado] }}</span>
+      @if (fuente.via === 'MAQUINA' && fuente.ultimaLectura) {
+        <span class="fecha">Última lectura: {{ fuente.ultimaLectura | date: 'd/M/yyyy HH:mm' }}</span>
+      }
       @if (fuente.ultimaCorrecta) {
         <span class="fecha">Última lectura correcta: {{ fuente.ultimaCorrecta | date: 'd/M/yyyy HH:mm' }}</span>
       } @else if (fuente.estado !== 'SIN_LEER') {
@@ -24,6 +27,10 @@
       }
       <div class="lectura">
         <span class="restantes">
+          @if (fuente.avisosPorCorrida) {
+            {{ fuente.lecturasDia === 1 ? '1 lectura al día' : fuente.lecturasDia + ' lecturas al día' }} · hasta
+            {{ fuente.avisosPorCorrida }} avisos por corrida ·
+          }
           @if (fuente.lecturasRestantes > 0) {
             {{ fuente.lecturasRestantes === 1 ? 'Le queda 1 lectura hoy' : 'Le quedan ' + fuente.lecturasRestantes + ' lecturas hoy' }}
           } @else {
@@ -41,11 +48,13 @@
             <mat-icon fontIcon="pause" />Pausar
           </button>
         }
-        <button mat-stroked-button type="button" class="leer" (click)="leer.emit(fuente.fuente)"
-          [disabled]="ocupada() || !sePuedeLeer(fuente)"
-          [attr.aria-label]="'Leer ' + fuente.nombre + ' ahora'">
-          <mat-icon fontIcon="sync" />Leer
-        </button>
+        @if (fuente.via !== 'MAQUINA') {
+          <button mat-stroked-button type="button" class="leer" (click)="leer.emit(fuente.fuente)"
+            [disabled]="ocupada() || !sePuedeLeer(fuente)"
+            [attr.aria-label]="'Leer ' + fuente.nombre + ' ahora'">
+            <mat-icon fontIcon="sync" />Leer
+          </button>
+        }
       </div>
     </li>
   }

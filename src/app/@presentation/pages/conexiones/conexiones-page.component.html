@@ -9,14 +9,28 @@
       [disabled]="recoleccion.ocupada() || !hayLecturas()">
       <mat-icon fontIcon="sync" />Leer todas ahora
     </button>
+    @if (deMaquina().length > 0) {
+      <button mat-stroked-button type="button" class="leer-maquina" (click)="recoleccion.leerDesdeMaquina()"
+        [disabled]="recoleccion.ocupada() || !maquinaLeible()">
+        <mat-icon fontIcon="computer" />Leer desde mi máquina
+      </button>
+    }
     <p class="ayuda">
       La lectura programada lee cada conexión una vez al día; puedes volver a leerlas ahora mientras les queden
       lecturas hoy. Una conexión pausada no se lee hasta reanudarla. Una que falla o bloquea no cuenta como día sin
       ofertas.
     </p>
+    @if (deMaquina().length > 0) {
+      <p class="ayuda">
+        Las conexiones de tu máquina solo se leen con «Leer desde mi máquina», que abre el lector instalado en esta Mac.
+      </p>
+    }
   </div>
   @if (motivoBloqueo(); as motivo) {
     <p class="motivo" role="status">{{ motivo }}</p>
+  }
+  @if (deMaquina().length > 0 && !maquinaLeible() && !recoleccion.enCurso()) {
+    <p class="motivo maquina" role="status">{{ msgSinMaquina }}</p>
   }
   @if (recoleccion.recoleccion(); as actual) {
     @if (actual.estado !== 'NINGUNA') {

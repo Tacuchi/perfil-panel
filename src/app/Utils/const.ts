@@ -1,6 +1,6 @@
 import { Encaje, EstadoLectura, EstadoOferta, Fuente, IFiltroOfertas, Modalidad } from '../@data/interfaces/oferta';
 import { EstadoConexion, Requisito, Via } from '../@data/interfaces/conexion';
-import { MotivoOmision, OrigenRecoleccion } from '../@data/interfaces/recoleccion';
+import { MotivoCierre, MotivoOmision, OrigenRecoleccion } from '../@data/interfaces/recoleccion';
 
 export const MSG_CARGA_ACEPTADA = 'CV subido. Ya es el vigente.';
 export const MSG_VIGENTE_CAMBIADA = 'Versión restaurada. Ya es la vigente.';
@@ -31,6 +31,7 @@ export const FUENTES: readonly { valor: Fuente; etiqueta: string }[] = [
   { valor: 'GET_ON_BOARD', etiqueta: 'Get on Board' },
   { valor: 'REMOTIVE', etiqueta: 'Remotive' },
   { valor: 'REMOTE_OK', etiqueta: 'Remote OK' },
+  { valor: 'LINKEDIN', etiqueta: 'LinkedIn' },
 ];
 
 export const MODALIDADES: readonly { valor: Modalidad; etiqueta: string }[] = [
@@ -72,17 +73,32 @@ export const ESTADOS_CONEXION: Readonly<Record<EstadoConexion, string>> = {
   LISTA: 'Lista',
   PAUSADA: 'Pausada',
   FALTA_CONFIGURAR: 'Falta configurar',
+  FALTA_INICIAR_SESION: 'Falta iniciar sesión',
+  PENDIENTE_MAQUINA: 'Pendiente de leer desde tu máquina',
 };
 
 export const ORIGENES_RECOLECCION: Readonly<Record<OrigenRecoleccion, string>> = {
   DEMANDA: 'a demanda',
   PROGRAMADA: 'programada',
+  MAQUINA: 'desde tu máquina',
 };
 
 export const MOTIVOS_OMISION: Readonly<Record<MotivoOmision, string>> = {
   TOPE_DIARIO: 'No leída: llegó a su tope de lecturas de hoy',
   PAUSADA: 'No leída: está pausada',
+  DESDE_MAQUINA: 'No leída: se lee desde tu máquina',
 };
+
+export const MOTIVOS_CIERRE: Readonly<Record<MotivoCierre, string>> = {
+  LECTOR_SIN_RESPUESTA: 'El lector no respondió en esta máquina.',
+  PLAZO_VENCIDO: 'La lectura desde tu máquina no terminó a tiempo.',
+};
+
+/** Enlace que abre el lector instalado en la máquina de la persona. */
+export const enlaceLector = (codigo: string): string => `perfil-lector://leer?corrida=${encodeURIComponent(codigo)}`;
+
+export const MSG_SIN_CONEXIONES_MAQUINA =
+  'Ninguna conexión de tu máquina se puede leer ahora: están pausadas o llegaron a su tope de hoy.';
 
 /** Cómo terminó cada fuente de una recolección. */
 export const RESULTADOS_LECTURA: Readonly<Record<EstadoLectura, string>> = {

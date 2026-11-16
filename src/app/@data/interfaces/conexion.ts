@@ -4,7 +4,7 @@ import { EstadoLectura, Fuente } from './oferta';
 export type Via = 'SERVIDOR' | 'PAGO' | 'MAQUINA';
 export type Requisito = 'NADA' | 'CLAVE' | 'SESION';
 /** Si se puede leer: distinto del resultado de la última lectura. */
-export type EstadoConexion = 'LISTA' | 'PAUSADA' | 'FALTA_CONFIGURAR';
+export type EstadoConexion = 'LISTA' | 'PAUSADA' | 'FALTA_CONFIGURAR' | 'FALTA_INICIAR_SESION' | 'PENDIENTE_MAQUINA';
 
 export interface IConexion {
   fuente: Fuente;
@@ -22,4 +22,8 @@ export interface IConexion {
   pausada: boolean;
   motivoPausa: string | null;
   estadoConexion: EstadoConexion;
+  /** Lecturas que admite en un día de Lima. */
+  lecturasDia: number;
+  /** Avisos que admite cada corrida; solo en las que se leen desde la máquina. */
+  avisosPorCorrida: number | null;
 }
