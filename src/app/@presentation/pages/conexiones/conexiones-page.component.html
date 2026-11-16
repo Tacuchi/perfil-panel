@@ -2,34 +2,59 @@
   <mat-progress-bar mode="indeterminate" class="progreso" />
 }
 
-<section class="conexiones" aria-labelledby="titulo-conexiones">
+<section class="conexiones" [class.con-detalle]="detalleAbierto()" aria-labelledby="titulo-conexiones">
+  <a mat-button routerLink="/conexiones" class="volver"><mat-icon fontIcon="arrow_back" />Conexiones</a>
   <div class="titulo">
-    <h2 id="titulo-conexiones">Conexiones</h2>
+    <!-- La barra superior ya muestra «Conexiones»: el encabezado queda para lectores de pantalla. -->
+    <h2 id="titulo-conexiones" class="solo-lector">Conexiones</h2>
+    <details class="ayuda">
+      <summary><mat-icon fontIcon="help" />Cómo se leen</summary>
+      <p>
+        Nada se lee solo: cada lectura la lanzas tú, con «Leer» o «Leer todas ahora», siempre que tengan saldo o lecturas disponibles.
+        Una conexión pausada no se lee hasta reanudarla. Una que falla o bloquea no cuenta como día sin ofertas.
+      </p>
+      @if (dePago().length > 0) {
+        <p>
+          Computrabajo, LinkedIn y Bumeran comparten una clave de Apify. Cada conexión tiene su propio tope mensual y
+          consumo, sin límite de lecturas al día. Al llegar al tope, sube el importe o espera al mes siguiente.
+        </p>
+      }
+    </details>
     <button mat-flat-button type="button" class="leer-todas" (click)="recoleccion.lanzar(null)"
       [disabled]="recoleccion.ocupada() || !hayLecturas()">
       <mat-icon fontIcon="sync" />Leer todas ahora
     </button>
-    <p class="ayuda">
-      Nada se lee solo: cada lectura la lanzas tú, con «Leer» o «Leer todas ahora», siempre que tengan saldo o lecturas disponibles.
-      Una conexión pausada no se lee hasta reanudarla. Una que falla o bloquea no cuenta como día sin ofertas.
-    </p>
-    @if (dePago().length > 0) {
-      <p class="ayuda">
-        Computrabajo, LinkedIn y Bumeran comparten una clave de Apify. Cada conexión tiene su propio tope mensual y
-        consumo, sin límite de lecturas al día. Al llegar al tope, sube el importe o espera al mes siguiente.
-      </p>
-    }
   </div>
   @if (motivoBloqueo(); as motivo) {
     <p class="motivo" role="status">{{ motivo }}</p>
   }
   @if (recoleccion.recoleccion(); as actual) {
     @if (actual.estado !== 'NINGUNA') {
-      <app-recoleccion-avance [recoleccion]="actual" />
+      <app-recoleccion-avance [recoleccion]="actual" [class.solo-lista]="!avanceDeEstaPantalla()" />
     }
   }
-  <app-fuentes-estado [fuentes]="store.conexiones()" [ocupada]="recoleccion.ocupada()" [guardando]="store.ocupado()"
-    (leer)="recoleccion.lanzar($event)" (pausar)="store.pausar($event)" (reanudar)="store.reanudar($event)"
-    (guardarClave)="store.cargarClave($event.fuente, $event.clave)"
-    (guardarTope)="store.fijarTope($event.fuente, $event.tope)" />
+  <div class="lista-detalle" [class.con-detalle]="detalleAbierto()">
+    <nav class="lista" aria-label="Conexiones">
+      <mat-nav-list>
+        @for (conexion of store.conexiones(); track conexion.fuente) {
+          <a mat-list-item [routerLink]="[conexion.fuente]" [activated]="elegida() === conexion.fuente"
+            [attr.aria-current]="elegida() === conexion.fuente ? 'page' : null" [attr.data-fuente]="conexion.fuente">
+            <mat-icon matListItemIcon [fontIcon]="leyendo(conexion.fuente) ? 'sync' : iconoDe(conexion)"
+              [class.fallo]="conexion.estado === 'FALLO' || conexion.estado === 'BLOQUEO'" />
+            <span matListItemTitle>{{ conexion.nombre }}</span>
+            <span matListItemLine>{{ leyendo(conexion.fuente) ? 'Leyendo…' : estadoDe(conexion) }}</span>
+            @if (conexion.estadoConexion !== 'LISTA') {
+              <span matListItemMeta class="marca">{{ estadosConexion[conexion.estadoConexion] }}</span>
+            }
+          </a>
+        }
+      </mat-nav-list>
+    </nav>
+    <div class="detalle">
+      <router-outlet (activate)="detalleAbierto.set(true)" (deactivate)="detalleAbierto.set(false)" />
+      @if (!detalleAbierto()) {
+        <p class="sin-eleccion">Elige una conexión para ver su estado y sus lecturas.</p>
+      }
+    </div>
+  </div>
 </section>

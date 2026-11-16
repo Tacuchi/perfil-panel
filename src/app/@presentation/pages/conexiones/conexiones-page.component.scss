@@ -1,47 +1,36 @@
-:host {
-  display: block;
-  container-type: inline-size;
+:host { display: block; }
+.progreso { position: sticky; top: 64px; z-index: 1; }
+.titulo { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 8px 16px; margin-bottom: 16px; }
+.leer-todas { grid-column: 2; grid-row: 1; }
+.volver { display: none; }
+// Ayuda plegada: el resumen ocupa la fila de «Leer todas ahora»; abierta, el texto baja a todo el ancho.
+.ayuda { display: contents; color: var(--mat-sys-on-surface-variant); font: var(--mat-sys-body-medium); }
+.ayuda summary {
+  grid-column: 1; grid-row: 1; justify-self: start; display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 12px 0 8px;
+  border-radius: var(--mat-sys-corner-full); font: var(--mat-sys-label-large); color: var(--mat-sys-on-surface-variant); cursor: pointer; list-style: none;
+  &::-webkit-details-marker { display: none; }
+  &:hover { background: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent); }
 }
-
-// No ocupa alto: así no empuja las tarjetas cuando aparece.
-.progreso {
-  position: sticky;
-  top: 64px;
-  z-index: 1;
-  margin: 0 -16px -4px;
-  width: auto;
-}
-
-.conexiones {
-  display: grid;
-  gap: 12px;
-}
-
-.titulo {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 16px;
-
-  h2 {
-    font: var(--mat-sys-title-medium);
+.ayuda p { grid-column: 1 / -1; margin: 0; max-width: 80ch; }
+.ayuda p + p { margin-top: 8px; }
+.motivo { color: var(--mat-sys-on-surface-variant); }
+app-recoleccion-avance { display: block; margin-bottom: 16px; }
+.lista-detalle { display: grid; grid-template-columns: minmax(280px, 1fr) minmax(0, 2fr); gap: 24px; align-items: start; }
+.lista, .detalle { border-radius: var(--mat-sys-corner-large); background: var(--mat-sys-surface-container-low); min-width: 0; }
+.lista { background: var(--mat-sys-surface-container); }
+.marca { max-width: 100px; white-space: normal; font: var(--mat-sys-label-small); }
+.fallo { color: var(--mat-sys-error); }
+.sin-eleccion { padding: 24px; color: var(--mat-sys-on-surface-variant); }
+@media (max-width: 959.98px) {
+  .conexiones.con-detalle {
+    .volver { display: inline-flex; margin-bottom: 8px; }
+    .titulo, > .motivo, .solo-lista { display: none; }
+    // Con una conexión abierta, el detalle va primero y el avance de la lectura queda debajo.
+    display: flex; flex-direction: column;
+    .volver { align-self: flex-start; }
+    app-recoleccion-avance { order: 1; margin: 16px 0 0; }
   }
-}
-
-// El botón general queda junto al título; la ayuda baja a su propia fila.
-.leer-todas {
-  margin-left: auto;
-}
-
-.ayuda {
-  flex-basis: 100%;
-  margin: 0;
-  color: var(--mat-sys-on-surface-variant);
-  font: var(--mat-sys-body-small);
-}
-
-.motivo {
-  margin: 0;
-  font: var(--mat-sys-body-medium);
-  color: var(--mat-sys-on-surface-variant);
+  .lista-detalle { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .detalle { display: none; }
+  .con-detalle { .lista { display: none; } .detalle { display: block; } }
 }

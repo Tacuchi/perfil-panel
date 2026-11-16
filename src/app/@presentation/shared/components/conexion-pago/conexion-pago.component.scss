@@ -1,4 +1,4 @@
-// Clave y tope dentro de la tarjeta de la conexión: datos arriba, cada campo con su botón al lado.
+// Clave y tope en el diálogo: cada campo con su acción.
 .pago {
   display: flex;
   flex-direction: column;
@@ -6,8 +6,17 @@
   margin-top: 4px;
 }
 
+// Los datos se agrupan; los campos quedan separados de ellos y entre sí.
+.consumo {
+  margin-bottom: 12px;
+}
+
+form + form {
+  margin-top: 8px;
+}
+
 .dato {
-  font: var(--mat-sys-body-small);
+  font: var(--mat-sys-body-medium);
   color: var(--mat-sys-on-surface-variant);
 }
 

@@ -33,6 +33,7 @@ export class RecoleccionStore {
   private readonly abrirEnlace = inject(ABRIR_ENLACE);
 
   private readonly state = signal<RecoleccionState>({ recoleccion: null, lanzando: false });
+  readonly lecturasTerminadas = signal<Partial<Record<Fuente, number>>>({});
   private consulta: Subscription | null = null;
 
   readonly recoleccion = computed(() => this.state().recoleccion);
@@ -102,7 +103,16 @@ export class RecoleccionStore {
   }
 
   private recibir(recoleccion: IRecoleccion): void {
-    const antes = this.state().recoleccion?.estado;
+    const previa = this.state().recoleccion;
+    const antes = previa?.estado;
+    for (const fuente of recoleccion.fuentes) {
+      const anterior = previa?.inicio === recoleccion.inicio
+        ? previa.fuentes.find((f) => f.fuente === fuente.fuente)?.paso : undefined;
+      if (fuente.paso === 'TERMINADA' && anterior !== 'TERMINADA') {
+        this.lecturasTerminadas.update((v) => ({ ...v, [fuente.fuente]: (v[fuente.fuente] ?? 0) + 1 }));
+        if (recoleccion.estado === 'EN_CURSO') this.conexiones.cargar();
+      }
+    }
     this.state.update((s) => ({ ...s, recoleccion }));
     if (recoleccion.estado === 'EN_CURSO') {
       this.consultar(INTERVALO_AVANCE_MS);

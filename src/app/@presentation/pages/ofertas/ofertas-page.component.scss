@@ -153,8 +153,8 @@
   .ofertas {
     display: flex;
     flex-direction: column;
-    // 64 de la barra superior + 24 del margen inferior.
-    height: calc(100dvh - 88px);
+    // 64 de la barra superior + 8 del margen superior + 24 del inferior.
+    height: calc(100dvh - 96px);
     min-height: 560px;
   }
 

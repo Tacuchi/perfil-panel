@@ -39,12 +39,12 @@
 // Márgenes de M3: 16 en compacta, 24 desde mediana.
 main {
   flex: 1;
-  padding: 0 16px 24px;
+  padding: 8px 16px 24px;
 }
 
 [data-navegacion='riel'] main,
 [data-navegacion='menu'] main {
-  padding: 0 24px 24px;
+  padding: 8px 24px 24px;
 }
 
 // Cajón estándar: 360dp, surface-container, esquinas finales large.

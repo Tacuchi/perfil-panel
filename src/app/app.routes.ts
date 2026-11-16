@@ -31,6 +31,11 @@ export const routes: Routes = [
     data: { seccion: 'Conexiones' },
     loadComponent: () =>
       import('./@presentation/pages/conexiones/conexiones-page.component').then((m) => m.ConexionesPageComponent),
+    children: [{
+      path: ':fuente',
+      title: 'Perfil · Conexión',
+      loadComponent: () => import('./@presentation/pages/conexiones/conexion-detalle.component').then((m) => m.ConexionDetalleComponent),
+    }],
   },
   {
     path: 'ajustes',

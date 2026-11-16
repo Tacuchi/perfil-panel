@@ -1,290 +1,192 @@
-import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
-import { IConexion } from '../../../@data/interfaces/conexion';
-import { IRecoleccion } from '../../../@data/interfaces/recoleccion';
-import { ConexionesPageComponent } from './conexiones-page.component';
-import {
-  CONEXION_PAUSADA,
-  CONEXION_REANUDADA,
-  FUENTES_CON_PAUSADA,
-  FUENTES_DE_PRUEBA,
-  FUENTES_EN_TOPE,
-  FUENTES_SIN_LEER,
-  FUENTES_TODAS_PAUSADAS,
-  RECHAZO_EN_CURSO,
-  RECHAZO_PAUSADA,
-  RECOLECCION_GENERAL_ACEPTADA,
-  RECOLECCION_GENERAL_A_MITAD,
-  RECOLECCION_GENERAL_CON_OMITIDA,
-  RECOLECCION_GENERAL_CON_PAUSADA,
-  RECOLECCION_NINGUNA,
-  RECOLECCION_TERMINADA_FALLO_BLOQUEO,
-  RECOLECCION_UNA_FUENTE_ACEPTADA,
-} from './recoleccion-de-prueba';
+import { PantallaConexionesPrueba, conexionesDePrueba, prepararPantalla } from './pantalla-conexiones-prueba';
+import { RECHAZO_EN_CURSO, RECOLECCION_GENERAL_ACEPTADA, RECOLECCION_GENERAL_A_MITAD, RECOLECCION_UNA_FUENTE_ACEPTADA, RECOLECCION_TERMINADA_FALLO_BLOQUEO, RECHAZO_PAUSADA } from './recoleccion-de-prueba';
 
-/** Conexiones y recolección a demanda, con respuestas copiadas de la API y temporizadores simulados. */
-describe('ConexionesPageComponent', () => {
-  let fixture: ComponentFixture<ConexionesPageComponent>;
-  let http: HttpTestingController;
+describe('Lista y detalle de conexiones', () => {
+  let p: PantallaConexionesPrueba;
+  afterEach(() => p?.cerrar());
 
-  beforeEach(async () => {
-    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] });
-    vi.setSystemTime(new Date(2026, 10, 15, 10, 0));
-    await TestBed.configureTestingModule({
-      imports: [ConexionesPageComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
-    }).compileComponents();
-    http = TestBed.inject(HttpTestingController);
+  it('muestra seis enlaces con resultado y marca de pausa o configuración pendiente', async () => {
+    p = await prepararPantalla();
+    const fuentes = conexionesDePrueba(false);
+    fuentes[1] = { ...fuentes[1], pausada: true, estadoConexion: 'PAUSADA' };
+    await p.abrir('/conexiones', fuentes);
+    expect(p.elemento.querySelectorAll('nav a')).toHaveLength(6);
+    expect(p.texto('nav')).toContain('Sin leer todavía');
+    expect(p.texto('nav')).toContain('Pausada');
+    expect(p.texto('nav')).toContain('Falta configurar');
+    expect(p.elemento.querySelector('app-conexion-detalle')).toBeNull();
   });
 
-  afterEach(() => {
-    // Ninguna consulta queda pendiente ni programada.
-    vi.advanceTimersByTime(10_000);
-    http.verify();
-    vi.useRealTimers();
-    document.querySelectorAll('.cdk-overlay-container').forEach((nodo) => (nodo.innerHTML = ''));
+  it('en escritorio elige la primera con problema y anuncia el enlace elegido', async () => {
+    p = await prepararPantalla(false);
+    const fuentes = conexionesDePrueba();
+    fuentes[3] = { ...fuentes[3], estado: 'FALLO', detalle: 'La lectura no trajo respuestas' };
+    await p.abrir('/conexiones', fuentes);
+    expect(p.router.url).toBe('/conexiones/LINKEDIN');
+    expect(p.texto('h3')).toBe('LinkedIn');
+    expect(p.elemento.querySelector('nav a[aria-current="page"]')?.textContent).toContain('LinkedIn');
+    expect(p.texto('.estado', p.detalle)).toContain('Falló');
+    expect(p.texto('.motivo', p.detalle)).toContain('no trajo respuestas');
   });
 
-  const pantalla = () => fixture.nativeElement as HTMLElement;
-  const texto = (selector: string) => pantalla().querySelector(selector)?.textContent?.replace(/\s+/g, ' ').trim();
-  const boton = (selector: string) => pantalla().querySelector(selector) as HTMLButtonElement;
-
-  function refrescar(): void {
-    fixture.detectChanges();
-  }
-
-  /** Monta la pantalla y responde la carga inicial: conexiones y recolección actual. */
-  function abrir(recoleccion: IRecoleccion, fuentes: IConexion[] = FUENTES_SIN_LEER): void {
-    fixture = TestBed.createComponent(ConexionesPageComponent);
-    fixture.detectChanges();
-    http.expectOne({ method: 'GET', url: '/api/fuentes' }).flush(fuentes);
-    http.expectOne({ method: 'GET', url: '/api/recoleccion' }).flush(recoleccion);
-    refrescar();
-  }
-
-  /** Pasa un segundo y responde la consulta de avance que sale. */
-  function siguienteAvance(recoleccion: IRecoleccion): void {
-    vi.advanceTimersByTime(1000);
-    http.expectOne({ method: 'GET', url: '/api/recoleccion' }).flush(recoleccion);
-    refrescar();
-  }
-
-  const pasoDe = (fuente: string) => texto(`app-recoleccion-avance [data-fuente="${fuente}"] .texto`);
-  const barra = () => pantalla().querySelector('app-recoleccion-avance mat-progress-bar') as HTMLElement;
-
-  it('el botón general lanza todas las fuentes y la barra aparece sobre las lanzadas', () => {
-    abrir(RECOLECCION_NINGUNA);
-    expect(pantalla().querySelector('app-recoleccion-avance')).toBeNull();
-
-    boton('.leer-todas').click();
-    const pedido = http.expectOne({ method: 'POST', url: '/api/recoleccion' });
-    expect(pedido.request.body).toBeNull();
-    pedido.flush(RECOLECCION_GENERAL_ACEPTADA, { status: 202, statusText: 'Accepted' });
-    refrescar();
-
-    expect(texto('app-recoleccion-avance .titulo')).toBe('Recolección a demanda en curso: 0 de 3 fuentes');
-    expect(pasoDe('GET_ON_BOARD')).toBe('Pendiente');
-    expect(pasoDe('REMOTIVE')).toBe('Pendiente');
-    expect(pasoDe('REMOTE_OK')).toBe('Pendiente');
-    expect(barra().getAttribute('aria-valuenow')).toBe('0');
-
-    siguienteAvance(RECOLECCION_TERMINADA_FALLO_BLOQUEO);
-    http.expectOne({ method: 'GET', url: '/api/fuentes' }).flush(FUENTES_SIN_LEER);
+  it('sin problemas elige la primera en escritorio', async () => {
+    p = await prepararPantalla(false); await p.abrir('/conexiones');
+    expect(p.router.url).toBe('/conexiones/GET_ON_BOARD');
   });
 
-  it('el botón de una fuente lanza solo esa', () => {
-    abrir(RECOLECCION_NINGUNA);
-
-    boton('button[aria-label="Leer Remotive ahora"]').click();
-    http.expectOne({ method: 'POST', url: '/api/recoleccion/REMOTIVE' })
-      .flush(RECOLECCION_UNA_FUENTE_ACEPTADA, { status: 202, statusText: 'Accepted' });
-    refrescar();
-
-    expect(texto('app-recoleccion-avance .titulo')).toBe('Recolección a demanda en curso: 0 de 1 fuentes');
-    expect(pantalla().querySelectorAll('app-recoleccion-avance .paso')).toHaveLength(1);
-    expect(pasoDe('REMOTIVE')).toBe('Pendiente');
-
-    fixture.destroy();
+  it('la ruta conserva Bumeran al volver a entrar y en teléfono permite volver a la lista', async () => {
+    p = await prepararPantalla(); await p.abrir('/conexiones/BUMERAN');
+    expect(p.texto('h3')).toBe('Bumeran');
+    expect(p.elemento.querySelector('.lista-detalle')?.classList).toContain('con-detalle');
+    p.boton('.volver').click(); await p.harness.fixture.whenStable(); p.refrescar();
+    expect(p.router.url).toBe('/conexiones');
+    expect(p.elemento.querySelector('.lista-detalle')?.classList).not.toContain('con-detalle');
+    await p.navegar('/conexiones/BUMERAN');
+    expect(p.texto('h3')).toBe('Bumeran');
+    expect(p.boton('.leer-todas')).toBeTruthy();
   });
 
-  it('mientras corre, la barra avanza con cada fuente terminada y al terminar muestra el resultado y recarga', () => {
-    abrir(RECOLECCION_NINGUNA);
-    boton('.leer-todas').click();
-    http.expectOne({ method: 'POST', url: '/api/recoleccion' }).flush(RECOLECCION_GENERAL_ACEPTADA);
-    refrescar();
-
-    siguienteAvance(RECOLECCION_GENERAL_A_MITAD);
-
-    expect(texto('app-recoleccion-avance .titulo')).toBe('Recolección a demanda en curso: 1 de 3 fuentes');
-    expect(barra().getAttribute('aria-valuenow')).toBe('33');
-    expect(pasoDe('GET_ON_BOARD')).toBe('Leída: 6 ofertas');
-    expect(pasoDe('REMOTIVE')).toBe('Leyendo…');
-    expect(pasoDe('REMOTE_OK')).toBe('Pendiente');
-
-    siguienteAvance(RECOLECCION_TERMINADA_FALLO_BLOQUEO);
-
-    expect(texto('app-recoleccion-avance .titulo')).toContain('Última recolección a demanda, terminada el 15/11/2026');
-    expect(barra().getAttribute('aria-valuenow')).toBe('100');
-    expect(pasoDe('GET_ON_BOARD')).toBe('Leída: 6 ofertas');
-    expect(pasoDe('REMOTIVE')).toBe('Falló');
-    expect(pasoDe('REMOTE_OK')).toBe('Bloqueada');
-    // Las conexiones vuelven a cargarse solas, sin recargar la página.
-    http.expectOne({ method: 'GET', url: '/api/fuentes' }).flush(FUENTES_EN_TOPE);
-    refrescar();
-    expect(texto('[data-fuente="REMOTIVE"] .restantes')).toBe('Llegó a su tope de lecturas de hoy.');
+  it('en escritorio un enlace directo conserva la conexión aunque otra tenga problema', async () => {
+    p = await prepararPantalla(false);
+    const fuentes = conexionesDePrueba();
+    fuentes[0] = { ...fuentes[0], estado: 'FALLO' };
+    await p.abrir('/conexiones/BUMERAN', fuentes);
+    expect(p.router.url).toBe('/conexiones/BUMERAN');
+    expect(p.texto('h3')).toBe('Bumeran');
   });
 
-  it('con una recolección en curso los botones no lanzan otra y el panel lo dice', () => {
-    abrir(RECOLECCION_GENERAL_A_MITAD);
-
-    expect(boton('.leer-todas').disabled).toBe(true);
-    pantalla().querySelectorAll<HTMLButtonElement>('app-fuentes-estado button.leer')
-      .forEach((b) => expect(b.disabled).toBe(true));
-    expect(texto('.motivo')).toBe('Hay una recolección en curso. Espera a que termine para lanzar otra.');
-
-    fixture.destroy();
+  it('detalle gratis conserva lecturas restantes, lectura individual y pausa/reanudación', async () => {
+    p = await prepararPantalla(); await p.abrir();
+    expect(p.texto('.restantes')).toBe('Le quedan 3 lecturas hoy');
+    expect(p.elemento.querySelector('.configurar')).toBeNull();
+    expect(p.texto('.via')).toBe('Se lee desde el servidor');
+    expect(p.texto('.necesita')).toBe('No necesita nada');
+    const pausada = { ...conexionesDePrueba()[1], pausada: true, estadoConexion: 'PAUSADA' };
+    p.boton('.pausa', p.detalle).click(); p.http.expectOne('/api/fuentes/REMOTIVE/pausar').flush(pausada); p.refrescar();
+    expect(p.boton('.leer', p.detalle).disabled).toBe(true);
+    expect(p.texto('.conexion', p.detalle)).toBe('Pausada');
+    p.boton('.pausa', p.detalle).click(); p.http.expectOne('/api/fuentes/REMOTIVE/reanudar').flush(conexionesDePrueba()[1]); p.refrescar();
+    expect(p.boton('.leer', p.detalle).disabled).toBe(false);
+    p.boton('.leer', p.detalle).click();
+    const solicitud = p.http.expectOne({ method: 'POST', url: '/api/recoleccion/REMOTIVE' });
+    expect(solicitud.request.body).toBeNull(); solicitud.flush(RECOLECCION_UNA_FUENTE_ACEPTADA); p.refrescar();
+    expect(p.boton('.leer', p.detalle).disabled).toBe(true);
+    expect(p.boton('.leer-todas').disabled).toBe(true);
+    expect(p.texto('app-recoleccion-avance .titulo')).toContain('0 de 1 fuentes');
+    expect(p.elemento.querySelectorAll('app-recoleccion-avance .paso')).toHaveLength(1);
+    expect(p.texto('app-recoleccion-avance .texto')).toBe('Pendiente');
   });
 
-  it('si la API rechaza el lanzamiento porque ya corre otra, lo dice y muestra la que corre', () => {
-    abrir(RECOLECCION_NINGUNA);
+  it('una bloqueada conserva fecha correcta y motivo sin teñir toda la fila', async () => {
+    p = await prepararPantalla(); const fuentes = conexionesDePrueba();
+    fuentes[2] = { ...fuentes[2], estado: 'BLOQUEO', ultimaCorrecta: '2026-11-14T12:00:00Z', detalle: 'HTTP 403' };
+    await p.abrir('/conexiones/REMOTE_OK', fuentes);
+    expect(p.texto('.estado', p.detalle)).toContain('Bloqueada');
+    expect(p.texto('.fecha', p.detalle)).toContain('14/11/2026');
+    expect(p.texto('.motivo', p.detalle)).toBe('HTTP 403');
+  });
 
-    boton('.leer-todas').click();
-    http.expectOne({ method: 'POST', url: '/api/recoleccion' })
-      .flush(RECHAZO_EN_CURSO, { status: 409, statusText: 'Conflict' });
-    http.expectOne({ method: 'GET', url: '/api/recoleccion' }).flush(RECOLECCION_GENERAL_A_MITAD);
-    refrescar();
+  it('en el tope diario bloquea Leer y si todas llegaron bloquea Leer todas', async () => {
+    p = await prepararPantalla(); const fuentes = conexionesDePrueba(false).map((c) => ({ ...c, lecturasRestantes: 0 }));
+    await p.abrir('/conexiones/REMOTIVE', fuentes);
+    expect(p.boton('.leer', p.detalle).disabled).toBe(true);
+    expect(p.boton('.leer-todas').disabled).toBe(true);
+    expect(p.texto('.restantes')).toContain('Llegó a su tope');
+    expect(p.texto('.motivo')).toContain('Todas las fuentes llegaron');
+  });
 
+  it('la recolección general y su avance quedan sobre lista y detalle y muestran las omitidas', async () => {
+    p = await prepararPantalla(); await p.abrir();
+    p.boton('.leer-todas').click();
+    const solicitud = p.http.expectOne({method: 'POST', url: '/api/recoleccion'});
+    expect(solicitud.request.body).toBeNull();
+    solicitud.flush({ ...RECOLECCION_GENERAL_ACEPTADA, omitidas: [{ fuente: 'LINKEDIN', nombre: 'LinkedIn', motivo: 'TOPE_MENSUAL', gastado: 1, topeMensual: 1 }] });
+    p.refrescar(); expect(p.texto('app-recoleccion-avance')).toContain('Gastado US$ 1.00 de US$ 1.00');
+    expect(p.elemento.querySelector('app-recoleccion-avance mat-progress-bar')?.getAttribute('aria-valuenow')).toBe('0');
+    expect(p.texto('app-recoleccion-avance .titulo')).toContain('0 de 3 fuentes');
+    expect(p.elemento.querySelectorAll('app-recoleccion-avance [data-paso="PENDIENTE"]')).toHaveLength(3);
+    await p.navegar('/conexiones'); expect(p.elemento.querySelector('app-recoleccion-avance')).toBeTruthy();
+  });
+
+  it('rechazo de lectura muestra el motivo y recupera el avance sin lanzar el lector', async () => {
+    p = await prepararPantalla(); await p.abrir();
+    p.boton('.leer', p.detalle).click();
+    p.http.expectOne('/api/recoleccion/REMOTIVE').flush(RECHAZO_EN_CURSO, { status: 409, statusText: 'Conflict' });
+    p.http.expectOne('/api/recoleccion').flush(RECOLECCION_GENERAL_ACEPTADA); p.refrescar();
     expect(document.querySelector('.cdk-overlay-container')?.textContent).toContain(RECHAZO_EN_CURSO.detail);
-    expect(texto('.motivo')).toBe('Hay una recolección en curso. Espera a que termine para lanzar otra.');
-    expect(texto('app-recoleccion-avance .titulo')).toBe('Recolección a demanda en curso: 1 de 3 fuentes');
-
-    fixture.destroy();
+    expect(p.texto('.motivo')).toContain('Hay una recolección en curso');
   });
 
-  it('cada fuente muestra sus lecturas restantes y la que llegó a su tope no se puede lanzar', () => {
-    abrir(RECOLECCION_NINGUNA, [FUENTES_SIN_LEER[0], FUENTES_EN_TOPE[1], FUENTES_SIN_LEER[2]]);
-
-    expect(texto('[data-fuente="GET_ON_BOARD"] .restantes')).toBe('Le quedan 3 lecturas hoy');
-    expect(texto('[data-fuente="REMOTIVE"] .restantes')).toBe('Llegó a su tope de lecturas de hoy.');
-    expect(boton('button[aria-label="Leer Remotive ahora"]').disabled).toBe(true);
-    expect(boton('button[aria-label="Leer Remote OK ahora"]').disabled).toBe(false);
-    expect(boton('.leer-todas').disabled).toBe(false);
+  it('muestra Leyendo en fila y detalle y detiene consultas al salir', async () => {
+    p = await prepararPantalla(); await p.abrir('/conexiones/REMOTIVE', conexionesDePrueba(), RECOLECCION_GENERAL_A_MITAD);
+    expect(p.texto('.estado', p.detalle)).toContain('Leyendo');
+    expect(p.texto('nav a[data-fuente="REMOTIVE"]')).toContain('Leyendo');
+    expect(p.boton('.leer', p.detalle).disabled).toBe(true);
+    expect(p.boton('.leer-todas').disabled).toBe(true);
+    expect(p.texto('.conexiones > .motivo')).toBe('Hay una recolección en curso. Espera a que termine para lanzar otra.');
+    p.harness.fixture.destroy();
+    await new Promise((resolve) => setTimeout(resolve, 1100));
+    p.http.expectNone('/api/recoleccion');
   });
 
-  it('el botón general omite la fuente en su tope y la muestra como no leída con el motivo', () => {
-    abrir(RECOLECCION_NINGUNA);
-    boton('.leer-todas').click();
-    http.expectOne({ method: 'POST', url: '/api/recoleccion' }).flush(RECOLECCION_GENERAL_CON_OMITIDA);
-    refrescar();
-
-    expect(texto('app-recoleccion-avance .titulo')).toBe('Recolección a demanda en curso: 0 de 2 fuentes');
-    expect(texto('app-recoleccion-avance [data-paso="OMITIDA"] .nombre')).toBe('Remotive');
-    expect(pasoDe('REMOTIVE')).toBe('No leída: llegó a su tope de lecturas de hoy');
-
-    fixture.destroy();
+  it('el avance sigue cada fuente, termina con sus resultados y recarga los saldos del detalle', async () => {
+    p = await prepararPantalla(); await p.abrir('/conexiones/REMOTIVE', conexionesDePrueba(), RECOLECCION_GENERAL_A_MITAD);
+    expect(p.texto('app-recoleccion-avance .titulo')).toContain('1 de 3 fuentes');
+    expect(p.elemento.querySelector('app-recoleccion-avance mat-progress-bar')?.getAttribute('aria-valuenow')).toBe('33');
+    expect(p.texto('app-recoleccion-avance [data-fuente="GET_ON_BOARD"] .texto')).toBe('Leída: 6 ofertas');
+    expect(p.texto('app-recoleccion-avance [data-fuente="REMOTIVE"] .texto')).toBe('Leyendo…');
+    expect(p.texto('app-recoleccion-avance [data-fuente="REMOTE_OK"] .texto')).toBe('Pendiente');
+    await new Promise((resolve) => setTimeout(resolve, 1050));
+    p.http.expectOne('/api/recoleccion').flush({ ...RECOLECCION_TERMINADA_FALLO_BLOQUEO, inicio: RECOLECCION_GENERAL_A_MITAD.inicio });
+    p.http.expectOne('/api/fuentes').flush(conexionesDePrueba().map((c) => ({...c, lecturasRestantes: 0})));
+    p.refrescar(); p.responderHistorialVacio();
+    expect(p.texto('app-recoleccion-avance .titulo')).toContain('Última recolección a demanda, terminada el');
+    expect(p.elemento.querySelector('app-recoleccion-avance mat-progress-bar')?.getAttribute('aria-valuenow')).toBe('100');
+    expect(p.texto('app-recoleccion-avance [data-fuente="REMOTIVE"] .texto')).toBe('Falló');
+    expect(p.texto('app-recoleccion-avance [data-fuente="REMOTE_OK"] .texto')).toBe('Bloqueada');
+    expect(p.texto('.restantes', p.detalle)).toBe('Llegó a su tope de lecturas de hoy.');
+    expect(p.elemento.querySelector('app-recoleccion-avance')?.classList).not.toContain('solo-lista');
   });
 
-  it('con todas las fuentes en su tope el botón general está desactivado y dice por qué', () => {
-    abrir(RECOLECCION_NINGUNA, FUENTES_EN_TOPE);
-
-    expect(boton('.leer-todas').disabled).toBe(true);
-    expect(texto('.motivo')).toBe('Todas las fuentes llegaron a su tope de lecturas de hoy.');
+  it('el tope de una fuente no bloquea a otra que aún tiene lecturas', async () => {
+    p = await prepararPantalla(); const fuentes = conexionesDePrueba(); fuentes[1] = {...fuentes[1], lecturasRestantes: 0};
+    await p.abrir('/conexiones/REMOTIVE', fuentes);
+    expect(p.boton('.leer', p.detalle).disabled).toBe(true);
+    expect(p.boton('.leer-todas').disabled).toBe(false);
+    await p.navegar('/conexiones/REMOTE_OK');
+    expect(p.texto('.restantes', p.detalle)).toBe('Le quedan 3 lecturas hoy');
+    expect(p.boton('.leer', p.detalle).disabled).toBe(false);
   });
 
-  it('al abrir la pantalla con una recolección ya en curso la muestra y sigue su avance', () => {
-    abrir(RECOLECCION_GENERAL_A_MITAD);
+  for (const [motivo, texto] of [['TOPE_DIARIO', 'No leída: llegó a su tope de lecturas de hoy'], ['PAUSADA', 'No leída: está pausada']] as const) {
+    it(`Leer todas conserva la omitida por ${motivo} y su motivo`, async () => {
+      p = await prepararPantalla(); await p.abrir(); p.boton('.leer-todas').click();
+      p.http.expectOne('/api/recoleccion').flush({...RECOLECCION_GENERAL_ACEPTADA, total: 2,
+        fuentes: RECOLECCION_GENERAL_ACEPTADA.fuentes.filter((f) => f.fuente !== 'REMOTIVE'),
+        omitidas: [{fuente: 'REMOTIVE', nombre: 'Remotive', motivo}]}); p.refrescar();
+      expect(p.texto('app-recoleccion-avance .titulo')).toContain('0 de 2 fuentes');
+      expect(p.texto('app-recoleccion-avance [data-paso="OMITIDA"] .nombre')).toBe('Remotive');
+      expect(p.texto('app-recoleccion-avance [data-paso="OMITIDA"] .texto')).toBe(texto);
+    });
+  }
 
-    expect(texto('app-recoleccion-avance .titulo')).toBe('Recolección a demanda en curso: 1 de 3 fuentes');
-    expect(pasoDe('REMOTIVE')).toBe('Leyendo…');
-
-    siguienteAvance(RECOLECCION_GENERAL_A_MITAD);
-    siguienteAvance(RECOLECCION_TERMINADA_FALLO_BLOQUEO);
-    http.expectOne({ method: 'GET', url: '/api/fuentes' }).flush(FUENTES_SIN_LEER);
-    expect(pasoDe('REMOTIVE')).toBe('Falló');
-  });
-
-  it('al salir de la pantalla deja de consultar el avance', () => {
-    abrir(RECOLECCION_GENERAL_A_MITAD);
-
-    fixture.destroy();
-    vi.advanceTimersByTime(5000);
-
-    http.expectNone({ method: 'GET', url: '/api/recoleccion' });
-  });
-
-  it('una fuente bloqueada se ve como bloqueada con su última lectura correcta, no como día sin ofertas', async () => {
-    abrir(RECOLECCION_NINGUNA, FUENTES_DE_PRUEBA);
-
-    const remoteOk = pantalla().querySelector('[data-fuente="REMOTE_OK"]') as HTMLElement;
-    expect(remoteOk.textContent).toContain('Bloqueada');
-    expect(remoteOk.textContent).toContain('Última lectura correcta: 14/11/2026');
-    expect(remoteOk.textContent).toContain('HTTP 403');
-    expect(remoteOk.classList).toContain('problema');
-    expect(pantalla().querySelector('[data-fuente="REMOTIVE"]')?.textContent).toContain('Sin leer todavía');
-    expect(pantalla().querySelector('[data-fuente="GET_ON_BOARD"]')?.textContent).toContain('Correcta');
-  });
-
-  it('cada conexión dice desde dónde se lee y lo que necesita', () => {
-    abrir(RECOLECCION_NINGUNA);
-
-    expect(pantalla().querySelectorAll('app-fuentes-estado .fuente')).toHaveLength(3);
-    for (const fuente of ['GET_ON_BOARD', 'REMOTIVE', 'REMOTE_OK']) {
-      expect(texto(`[data-fuente="${fuente}"] .via`)).toBe('Se lee desde el servidor · No necesita nada');
-      expect(pantalla().querySelector(`[data-fuente="${fuente}"] .conexion`)).toBeNull();
-    }
-  });
-
-  it('pausar una conexión la marca pausada, desactiva su botón Leer y reanudarla lo devuelve', () => {
-    abrir(RECOLECCION_NINGUNA);
-
-    boton('button[aria-label="Pausar Remotive"]').click();
-    http.expectOne({ method: 'POST', url: '/api/fuentes/REMOTIVE/pausar' }).flush(CONEXION_PAUSADA);
-    refrescar();
-
-    expect(texto('[data-fuente="REMOTIVE"] .conexion')).toBe('Pausada');
-    expect(boton('button[aria-label="Leer Remotive ahora"]').disabled).toBe(true);
-    expect(boton('button[aria-label="Leer Remote OK ahora"]').disabled).toBe(false);
-    expect(boton('.leer-todas').disabled).toBe(false);
-
-    boton('button[aria-label="Reanudar Remotive"]').click();
-    http.expectOne({ method: 'POST', url: '/api/fuentes/REMOTIVE/reanudar' }).flush(CONEXION_REANUDADA);
-    refrescar();
-
-    expect(pantalla().querySelector('[data-fuente="REMOTIVE"] .conexion')).toBeNull();
-    expect(boton('button[aria-label="Leer Remotive ahora"]').disabled).toBe(false);
-    expect(boton('button[aria-label="Pausar Remotive"]')).not.toBeNull();
-  });
-
-  it('el botón general omite la pausada y la muestra como no leída con su motivo', () => {
-    abrir(RECOLECCION_NINGUNA, FUENTES_CON_PAUSADA);
-    boton('.leer-todas').click();
-    http.expectOne({ method: 'POST', url: '/api/recoleccion' }).flush(RECOLECCION_GENERAL_CON_PAUSADA);
-    refrescar();
-
-    expect(texto('app-recoleccion-avance .titulo')).toBe('Recolección a demanda en curso: 0 de 2 fuentes');
-    expect(pasoDe('REMOTIVE')).toBe('No leída: está pausada');
-
-    fixture.destroy();
-  });
-
-  it('si la API rechaza leer una pausada, muestra su motivo', () => {
-    abrir(RECOLECCION_NINGUNA);
-
-    boton('button[aria-label="Leer Remotive ahora"]').click();
-    http.expectOne({ method: 'POST', url: '/api/recoleccion/REMOTIVE' })
-      .flush(RECHAZO_PAUSADA, { status: 409, statusText: 'Conflict' });
-    http.expectOne({ method: 'GET', url: '/api/recoleccion' }).flush(RECOLECCION_NINGUNA);
-    refrescar();
-
+  it('si la API rechaza leer una pausada recupera el avance y muestra el motivo', async () => {
+    p = await prepararPantalla(); await p.abrir(); p.boton('.leer', p.detalle).click();
+    p.http.expectOne('/api/recoleccion/REMOTIVE').flush(RECHAZO_PAUSADA, {status: 409, statusText: 'Conflict'});
+    p.http.expectOne('/api/recoleccion').flush({ ...RECOLECCION_GENERAL_ACEPTADA, estado: 'NINGUNA', fuentes: [], total: 0 }); p.refrescar();
     expect(document.querySelector('.cdk-overlay-container')?.textContent).toContain(RECHAZO_PAUSADA.detail);
   });
 
-  it('sin ninguna conexión que se pueda leer el botón general está desactivado y dice por qué', () => {
-    abrir(RECOLECCION_NINGUNA, FUENTES_TODAS_PAUSADAS);
+  it('sin ninguna conexión leíble desactiva Leer todas y explica por qué', async () => {
+    p = await prepararPantalla(); await p.abrir('/conexiones', conexionesDePrueba().map((c) => ({...c, pausada: true, estadoConexion: 'PAUSADA'})));
+    expect(p.boton('.leer-todas').disabled).toBe(true);
+    expect(p.texto('.conexiones > .motivo')).toBe('Ninguna conexión se puede leer ahora: están pausadas o llegaron a su tope de hoy.');
+  });
 
-    expect(boton('.leer-todas').disabled).toBe(true);
-    expect(texto('.motivo')).toBe('Ninguna conexión se puede leer ahora: están pausadas o llegaron a su tope de hoy.');
+  it('en teléfono un avance histórico queda reservado para la lista', async () => {
+    p = await prepararPantalla(); await p.abrir('/conexiones/REMOTIVE', conexionesDePrueba(), RECOLECCION_TERMINADA_FALLO_BLOQUEO);
+    expect(p.elemento.querySelector('app-recoleccion-avance')?.classList).toContain('solo-lista');
+    expect(p.elemento.querySelector('section.conexiones')?.classList).toContain('con-detalle');
+    expect(p.elemento.querySelector('section.conexiones')?.firstElementChild).toBe(p.boton('.volver'));
   });
 });

@@ -1,0 +1,40 @@
+<section aria-labelledby="titulo-historial" [attr.aria-busy]="cargando()">
+  <header class="titulo-historial">
+    <h4 id="titulo-historial">Historial</h4>
+    @if (ultimaCorrecta(); as fecha) {
+      <span class="resumen">{{ lecturas().length }} lecturas@if (hayMas()) { cargadas } · última correcta {{ fecha | date: 'd/M HH:mm' }}</span>
+    }
+  </header>
+  @if (cargando()) { <mat-progress-bar mode="indeterminate" aria-label="Cargando lecturas" /> }
+  @if (fallo()) { <p role="status">No se pudo cargar el historial.</p> }
+  @if (!cargando() && !fallo() && lecturas().length === 0) { <p>Todavía no hay lecturas de esta conexión.</p> }
+  @if (lecturas().length > 0) {
+    <table mat-table [dataSource]="lecturas()" class="tabla" aria-label="Historial de lecturas" multiTemplateDataRows>
+      <ng-container matColumnDef="fecha"><th mat-header-cell *matHeaderCellDef>Fecha</th><td mat-cell *matCellDef="let lectura">{{ lectura.inicio | date: 'd/M HH:mm' }}</td></ng-container>
+      <ng-container matColumnDef="resultado"><th mat-header-cell *matHeaderCellDef>Resultado</th><td mat-cell *matCellDef="let lectura"><span class="resultado"><mat-icon [fontIcon]="iconoDe(lectura)" [class.fallo]="lectura.estado === 'FALLO' || lectura.estado === 'BLOQUEO'" />{{ estadoDe(lectura) }}</span></td></ng-container>
+      <ng-container matColumnDef="leidas"><th mat-header-cell *matHeaderCellDef class="numero">Leídas</th><td mat-cell *matCellDef="let lectura" class="numero">{{ lectura.leidas }}</td></ng-container>
+      <ng-container matColumnDef="nuevas"><th mat-header-cell *matHeaderCellDef class="numero">Nuevas</th><td mat-cell *matCellDef="let lectura" class="numero">{{ lectura.nuevas }}</td></ng-container>
+      <ng-container matColumnDef="costo"><th mat-header-cell *matHeaderCellDef class="numero">Costo US$</th><td mat-cell *matCellDef="let lectura" class="numero">{{ lectura.costoUsd === null ? '—' : (lectura.costoUsd | number: '1.3-4') }}</td></ng-container>
+      <ng-container matColumnDef="duracion"><th mat-header-cell *matHeaderCellDef class="numero">Duró</th><td mat-cell *matCellDef="let lectura" class="numero">{{ duracion(lectura.duracionMs) }}</td></ng-container>
+      <ng-container matColumnDef="motivo"><td mat-cell *matCellDef="let lectura" [attr.colspan]="dePago() ? 6 : 5" class="motivo">{{ lectura.motivo }}</td></ng-container>
+      <tr mat-header-row *matHeaderRowDef="dePago() ? ['fecha', 'resultado', 'leidas', 'nuevas', 'costo', 'duracion'] : ['fecha', 'resultado', 'leidas', 'nuevas', 'duracion']"></tr>
+      <tr mat-row *matRowDef="let lectura; columns: dePago() ? ['fecha', 'resultado', 'leidas', 'nuevas', 'costo', 'duracion'] : ['fecha', 'resultado', 'leidas', 'nuevas', 'duracion']" [class.con-motivo]="!!lectura.motivo"></tr>
+      <tr mat-row *matRowDef="let lectura; columns: ['motivo']" [hidden]="!lectura.motivo" class="fila-motivo"></tr>
+    </table>
+    <ol class="apilada" aria-label="Historial de lecturas">
+      @for (lectura of lecturas(); track lectura.id) {
+        <li>
+          <div class="cabecera"><time [attr.datetime]="lectura.inicio">{{ lectura.inicio | date: 'd/M/yyyy HH:mm' }}</time><strong class="resultado"><mat-icon [fontIcon]="iconoDe(lectura)" [class.fallo]="lectura.estado === 'FALLO' || lectura.estado === 'BLOQUEO'" />{{ estadoDe(lectura) }}</strong></div>
+          <dl>
+            <div><dt>Leídas</dt><dd>{{ lectura.leidas }}</dd></div>
+            <div><dt>Nuevas</dt><dd>{{ lectura.nuevas }}</dd></div>
+            @if (dePago()) { <div><dt>Costo (US$)</dt><dd>{{ lectura.costoUsd === null ? '—' : (lectura.costoUsd | number: '1.3-4') }}</dd></div> }
+            <div><dt>Duró</dt><dd>{{ duracion(lectura.duracionMs) }}</dd></div>
+          </dl>
+          @if (lectura.motivo) { <p class="motivo">{{ lectura.motivo }}</p> }
+        </li>
+      }
+    </ol>
+  }
+  @if (hayMas()) { <button mat-button type="button" class="ver-mas" (click)="verMas()" [disabled]="cargando()">Ver más</button> }
+</section>

@@ -1,0 +1,62 @@
+@if (conexion(); as actual) {
+  <article [attr.data-fuente]="actual.fuente" [attr.data-estado]="actual.estado" [attr.data-conexion]="actual.estadoConexion">
+    <header>
+      <h3>{{ actual.nombre }}</h3>
+      <div class="acciones" aria-label="Acciones de la conexión">
+        @if (actual.via === 'PAGO') {
+          <button mat-stroked-button type="button" class="configurar" #configurarPrincipal (click)="configurar()">Configurar</button>
+        }
+        @if (actual.pausada) {
+          <button mat-button type="button" class="pausa" (click)="store.reanudar(actual.fuente)" [disabled]="store.ocupado()" [attr.aria-label]="'Reanudar ' + actual.nombre"><mat-icon fontIcon="play_arrow" />Reanudar</button>
+        } @else {
+          <button mat-button type="button" class="pausa" (click)="store.pausar(actual.fuente)" [disabled]="store.ocupado()" [attr.aria-label]="'Pausar ' + actual.nombre"><mat-icon fontIcon="pause" />Pausar</button>
+        }
+        <button mat-stroked-button type="button" class="leer" (click)="recoleccion.lanzar(actual.fuente)"
+          [disabled]="recoleccion.ocupada() || actual.estadoConexion !== 'LISTA' || (actual.via !== 'PAGO' && actual.lecturasRestantes === 0)"
+          [attr.aria-label]="'Leer ' + actual.nombre + ' ahora'"><mat-icon fontIcon="sync" />Leer</button>
+      </div>
+    </header>
+
+    <div class="resultado">
+      <p class="estado" aria-live="polite">
+        <mat-icon class="icono" [fontIcon]="leyendo() ? 'sync' : iconoDe(actual)"
+          [class.fallo]="actual.estado === 'FALLO' || actual.estado === 'BLOQUEO'" />
+        {{ leyendo() ? 'Leyendo…' : estadoDe(actual) }}
+        @if (actual.ultimaLectura) { <span class="fecha-lectura">· {{ actual.ultimaLectura | date: 'd/M/yyyy HH:mm' }}</span> }
+      </p>
+      @if (actual.detalle) {
+        <p class="motivo aviso" [class.advertencia]="actual.parcial" [class.error]="actual.estado === 'FALLO' || actual.estado === 'BLOQUEO'">{{ actual.detalle }}</p>
+      }
+    </div>
+
+    @if (actual.estadoConexion !== 'LISTA' && actual.estadoConexion !== 'TOPE_MENSUAL') {
+      <div class="conexion aviso">
+        <span>{{ estados[actual.estadoConexion] }}@if (actual.motivoPausa) {: {{ actual.motivoPausa }}} @else if (actual.queFalta) {: {{ actual.queFalta }}}</span>
+        @if (actual.estadoConexion === 'FALTA_CONFIGURAR' && actual.via === 'PAGO') {
+          <button mat-button type="button" class="completar-configuracion" (click)="configurar()">Completar configuración</button>
+        }
+      </div>
+    }
+
+    <dl class="datos">
+      <dt>Última lectura correcta</dt>
+      <dd class="fecha">@if (actual.ultimaCorrecta) { {{ actual.ultimaCorrecta | date: 'd/M/yyyy HH:mm' }} } @else { Sin lecturas correctas }</dd>
+      <dt>Cómo se lee</dt><dd class="via">{{ vias[actual.via] }}</dd>
+      <dt>Necesita</dt><dd class="necesita">{{ requisitos[actual.necesita] }}</dd>
+      @if (actual.via === 'PAGO') {
+        <dt>Consumo del mes</dt>
+        <dd class="consumo-mes" [class.tope-alcanzado]="actual.estadoConexion === 'TOPE_MENSUAL'">
+          <span class="consumo">{{ dolares(actual.consumoMes ?? 0) }}@if (actual.topeMensual !== null) { de {{ dolares(actual.topeMensual) }} } @else { · sin tope mensual }</span>
+          @if (actual.topeMensual !== null) {
+            <mat-progress-bar mode="determinate" [value]="consumoPorcentaje()" aria-label="Consumo del tope mensual" />
+          }
+          @if (actual.estadoConexion === 'TOPE_MENSUAL') { <span class="conexion">{{ estados[actual.estadoConexion] }}</span> }
+        </dd>
+      } @else {
+        <dt>Lecturas de hoy</dt>
+        <dd class="restantes">{{ actual.lecturasRestantes > 0 ? (actual.lecturasRestantes === 1 ? 'Le queda 1 lectura hoy' : 'Le quedan ' + actual.lecturasRestantes + ' lecturas hoy') : msgEnTope }}</dd>
+      }
+    </dl>
+    <app-conexiones-historial [fuente]="actual.fuente" [dePago]="actual.via === 'PAGO'" />
+  </article>
+} @else if (!store.ocupado()) { <p class="sin-conexion">No se encontró esta conexión. Elige una en la lista.</p> }
