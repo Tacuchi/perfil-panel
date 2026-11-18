@@ -1,10 +1,15 @@
-# Cualquier push → pruebas y build. Solo en main → imagen linux/amd64 con etiqueta inmutable (git SHA) en GHCR
+# Cualquier push que no sea solo de documentación → pruebas y build. Solo en main → imagen linux/amd64 con etiqueta inmutable (git SHA) en GHCR
 # → redeploy en Coolify. Mismo patrón que developer-portfolio.
 # Secrets requeridos en GitHub: COOLIFY_TOKEN · COOLIFY_APP_UUID.
 name: deploy
 
 on:
   push:
+    # Un cambio solo de documentación no corre las pruebas ni redespliega.
+    paths-ignore:
+      - "docs/**"
+      - "README.md"
+      - "ARCHITECTURE.md"
   workflow_dispatch:
 
 env:
