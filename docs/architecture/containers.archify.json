@@ -1,0 +1,379 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Contenedores: perfil-panel",
+    "locale": "es",
+    "output": "docs/architecture/containers.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/Tacuchi/perfil-panel.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "25702d9f5af9ddd2ab7db94b1bbdb3f62cc1265a"
+    }
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Tú",
+      "sublabel": "navegador",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        140,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/app/app.ts",
+          "line": 42,
+          "end_line": 47
+        }
+      ],
+      "icon": "person"
+    },
+    {
+      "id": "pantallas",
+      "type": "frontend",
+      "label": "Pantallas",
+      "sublabel": "CV · Ofertas · Conexiones · Ajustes",
+      "pos": [
+        300,
+        40
+      ],
+      "size": [
+        180,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/app/app.routes.ts",
+          "line": 4,
+          "end_line": 48
+        }
+      ]
+    },
+    {
+      "id": "stores",
+      "type": "frontend",
+      "label": "Stores",
+      "sublabel": "estado por pantalla · signals",
+      "pos": [
+        300,
+        160
+      ],
+      "size": [
+        180,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/app/@presentation/pages/conexiones/recoleccion.store.ts",
+          "line": 24,
+          "end_line": 42
+        },
+        {
+          "path": "src/app/@presentation/pages/conexiones/conexiones.store.ts",
+          "line": 14,
+          "end_line": 23
+        }
+      ]
+    },
+    {
+      "id": "servicios",
+      "type": "frontend",
+      "label": "Servicios de datos",
+      "sublabel": "uno por recurso de la API",
+      "pos": [
+        300,
+        280
+      ],
+      "size": [
+        180,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/app/@data/services/ofertas.service.ts",
+          "line": 14,
+          "end_line": 43
+        },
+        {
+          "path": "src/app/@data/services/conexiones.service.ts",
+          "line": 9,
+          "end_line": 13
+        }
+      ]
+    },
+    {
+      "id": "cliente",
+      "type": "security",
+      "label": "Cliente HTTP",
+      "sublabel": "único punto · errores visibles",
+      "pos": [
+        300,
+        400
+      ],
+      "size": [
+        180,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/app/@data/services/api-client.service.ts",
+          "line": 13,
+          "end_line": 21
+        }
+      ]
+    },
+    {
+      "id": "almacen",
+      "type": "database",
+      "label": "localStorage",
+      "sublabel": "tema y paleta",
+      "pos": [
+        530,
+        160
+      ],
+      "size": [
+        140,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/app/@presentation/shared/tema.store.ts",
+          "line": 22,
+          "end_line": 34
+        }
+      ]
+    },
+    {
+      "id": "nginx",
+      "type": "backend",
+      "label": "nginx",
+      "sublabel": "sitio estático · puerto 80",
+      "pos": [
+        300,
+        560
+      ],
+      "size": [
+        180,
+        60
+      ],
+      "sources": [
+        {
+          "path": "nginx.conf",
+          "line": 1,
+          "end_line": 11
+        },
+        {
+          "path": "Dockerfile",
+          "line": 9,
+          "end_line": 13
+        }
+      ]
+    },
+    {
+      "id": "proxy",
+      "type": "security",
+      "label": "Proxy de acceso",
+      "sublabel": "sesión delante de todo",
+      "pos": [
+        780,
+        400
+      ],
+      "size": [
+        150,
+        220
+      ],
+      "sources": [
+        {
+          "path": "src/app/@data/services/api-client.service.ts",
+          "line": 46,
+          "end_line": 50
+        }
+      ]
+    },
+    {
+      "id": "api",
+      "type": "cloud",
+      "label": "API",
+      "sublabel": "/api",
+      "pos": [
+        1110,
+        480
+      ],
+      "size": [
+        160,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/environments/environment.ts",
+          "line": 1,
+          "end_line": 4
+        }
+      ]
+    },
+    {
+      "id": "lector",
+      "type": "external",
+      "label": "Lector local",
+      "sublabel": "perfil-lector://",
+      "pos": [
+        1110,
+        160
+      ],
+      "size": [
+        160,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/app/Utils/const.ts",
+          "line": 118,
+          "end_line": 119
+        }
+      ]
+    },
+    {
+      "id": "externos",
+      "type": "external",
+      "label": "Correo y publicación",
+      "sublabel": "enlaces que abre la persona",
+      "pos": [
+        1110,
+        40
+      ],
+      "size": [
+        160,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/app/Utils/correo.ts",
+          "line": 3,
+          "end_line": 11
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Navegador de la persona",
+      "wraps": [
+        "pantallas",
+        "stores",
+        "servicios",
+        "cliente",
+        "almacen"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Contenedor del panel",
+      "wraps": [
+        "nginx"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "persona-pantallas",
+      "from": "persona",
+      "to": "pantallas",
+      "label": "usa",
+      "variant": "emphasis"
+    },
+    {
+      "id": "pantallas-stores",
+      "from": "pantallas",
+      "to": "stores"
+    },
+    {
+      "id": "stores-almacen",
+      "from": "stores",
+      "to": "almacen",
+      "label": "Ajustes"
+    },
+    {
+      "id": "stores-servicios",
+      "from": "stores",
+      "to": "servicios"
+    },
+    {
+      "id": "servicios-cliente",
+      "from": "servicios",
+      "to": "cliente"
+    },
+    {
+      "id": "cliente-proxy",
+      "from": "cliente",
+      "to": "proxy",
+      "label": "/api · misma dirección",
+      "variant": "emphasis"
+    },
+    {
+      "id": "proxy-api",
+      "from": "proxy",
+      "to": "api",
+      "label": "con la cabecera de sesión",
+      "variant": "security",
+      "route": "straight"
+    },
+    {
+      "id": "proxy-nginx",
+      "from": "proxy",
+      "to": "nginx",
+      "label": "el resto de rutas"
+    },
+    {
+      "id": "stores-lector",
+      "from": "stores",
+      "to": "lector",
+      "label": "código de un solo uso"
+    },
+    {
+      "id": "pantallas-externos",
+      "from": "pantallas",
+      "to": "externos",
+      "label": "mailto y enlace"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "Reglas que no se rompen",
+      "items": [
+        "Toda llamada HTTP pasa por el cliente único",
+        "Ningún error se silencia: se muestra y se vuelve a lanzar",
+        "El panel solo habla con la API, bajo /api",
+        "La clave de una conexión nunca vuelve de la API",
+        "El código de la corrida local solo viaja en el enlace"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Valores por defecto",
+      "items": [
+        "Avance de la recolección: cada segundo, solo mientras corre",
+        "Tema: el del sistema; paleta verde",
+        "Ofertas: nuevas de encaje alto y medio de 7 días",
+        "index.html sin caché; JS y CSS con huella, un año"
+      ]
+    },
+    {
+      "dot": "slate",
+      "title": "Revisión",
+      "items": [
+        "Versión 0.0.0, commit 25702d9",
+        "Revisado el 2026-11-18"
+      ]
+    }
+  ]
+}

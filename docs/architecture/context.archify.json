@@ -1,0 +1,304 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Contexto: perfil-panel",
+    "locale": "es",
+    "output": "docs/architecture/context.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/Tacuchi/perfil-panel.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "25702d9f5af9ddd2ab7db94b1bbdb3f62cc1265a"
+    }
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Tú",
+      "sublabel": "navegador",
+      "pos": [
+        40,
+        100
+      ],
+      "size": [
+        130,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/app/app.ts",
+          "line": 42,
+          "end_line": 47
+        }
+      ],
+      "icon": "person"
+    },
+    {
+      "id": "proxy",
+      "type": "security",
+      "label": "Proxy de acceso",
+      "sublabel": "login delante del panel",
+      "pos": [
+        40,
+        250
+      ],
+      "size": [
+        130,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/app/@data/services/toast.service.ts",
+          "line": 18,
+          "end_line": 24
+        },
+        {
+          "path": "proxy.conf.mjs",
+          "line": 1,
+          "end_line": 2
+        }
+      ]
+    },
+    {
+      "id": "orquestador",
+      "type": "external",
+      "label": "Orquestador",
+      "sublabel": "despliega la imagen",
+      "pos": [
+        40,
+        400
+      ],
+      "size": [
+        130,
+        60
+      ],
+      "sources": [
+        {
+          "path": ".github/workflows/deploy.yml",
+          "line": 65,
+          "end_line": 78
+        }
+      ]
+    },
+    {
+      "id": "panel",
+      "type": "frontend",
+      "label": "perfil-panel",
+      "sublabel": "panel del CV y las ofertas",
+      "pos": [
+        330,
+        40
+      ],
+      "size": [
+        190,
+        480
+      ],
+      "sources": [
+        {
+          "path": "package.json",
+          "line": 2,
+          "end_line": 3
+        },
+        {
+          "path": "src/app/app.routes.ts",
+          "line": 4,
+          "end_line": 48
+        }
+      ]
+    },
+    {
+      "id": "api",
+      "type": "cloud",
+      "label": "API",
+      "sublabel": "/api, misma dirección",
+      "pos": [
+        700,
+        40
+      ],
+      "size": [
+        160,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/environments/environment.ts",
+          "line": 1,
+          "end_line": 4
+        }
+      ]
+    },
+    {
+      "id": "lector",
+      "type": "external",
+      "label": "Lector local",
+      "sublabel": "perfil-lector://",
+      "pos": [
+        700,
+        140
+      ],
+      "size": [
+        160,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/app/Utils/const.ts",
+          "line": 118,
+          "end_line": 119
+        }
+      ]
+    },
+    {
+      "id": "publicacion",
+      "type": "external",
+      "label": "Publicación original",
+      "sublabel": "de cada oferta",
+      "pos": [
+        700,
+        240
+      ],
+      "size": [
+        160,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/app/@presentation/pages/oferta/oferta-page.component.html",
+          "line": 59,
+          "end_line": 59
+        }
+      ]
+    },
+    {
+      "id": "correo",
+      "type": "external",
+      "label": "Aplicación de correo",
+      "sublabel": "enlace mailto:",
+      "pos": [
+        700,
+        340
+      ],
+      "size": [
+        160,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/app/Utils/correo.ts",
+          "line": 3,
+          "end_line": 11
+        }
+      ]
+    },
+    {
+      "id": "fuentes",
+      "type": "external",
+      "label": "Google Fonts",
+      "sublabel": "tipografía e íconos",
+      "pos": [
+        700,
+        440
+      ],
+      "size": [
+        160,
+        60
+      ],
+      "sources": [
+        {
+          "path": "src/index.html",
+          "line": 10,
+          "end_line": 18
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "persona-proxy",
+      "from": "persona",
+      "to": "proxy",
+      "label": "inicia sesión",
+      "variant": "emphasis"
+    },
+    {
+      "id": "proxy-panel",
+      "from": "proxy",
+      "to": "panel",
+      "label": "HTTPS con sesión",
+      "variant": "security"
+    },
+    {
+      "id": "orquestador-panel",
+      "from": "orquestador",
+      "to": "panel",
+      "label": "al pasar a main",
+      "variant": "dashed"
+    },
+    {
+      "id": "panel-api",
+      "from": "panel",
+      "to": "api",
+      "label": "HTTP a /api",
+      "variant": "emphasis"
+    },
+    {
+      "id": "panel-lector",
+      "from": "panel",
+      "to": "lector",
+      "label": "Leer desde mi máquina"
+    },
+    {
+      "id": "panel-publicacion",
+      "from": "panel",
+      "to": "publicacion",
+      "label": "abre en otra pestaña"
+    },
+    {
+      "id": "panel-correo",
+      "from": "panel",
+      "to": "correo",
+      "label": "arma el correo"
+    },
+    {
+      "id": "panel-fuentes",
+      "from": "panel",
+      "to": "fuentes",
+      "label": "al cargar la página",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Cuándo ocurre cada conexión",
+      "items": [
+        "API: en cada pantalla y, con una recolección en curso, cada segundo",
+        "Lector local: solo con el botón Leer desde mi máquina",
+        "Publicación y correo: solo cuando la persona los abre",
+        "Google Fonts: al cargar la página",
+        "Orquestador: en cada push a main que no sea solo documentación"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Qué no es",
+      "items": [
+        "No es un servidor de datos: es un sitio estático",
+        "No guarda ofertas ni el CV: todo vive en la API",
+        "No postula ni envía correos por la persona",
+        "No inicia sesión: eso lo hace el proxy de acceso"
+      ]
+    },
+    {
+      "dot": "slate",
+      "title": "Revisión",
+      "items": [
+        "Versión 0.0.0, commit 25702d9",
+        "Revisado el 2026-11-18"
+      ]
+    }
+  ]
+}
