@@ -43,7 +43,7 @@ El cuadro completo está en [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Contribuir
 
-Es un proyecto personal y privado: no se aceptan contribuciones externas.
+Es un proyecto personal: no se aceptan contribuciones externas.
 
 ## Licencia
 

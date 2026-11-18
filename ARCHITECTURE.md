@@ -28,7 +28,7 @@ Qué no es:
 
 ![Diagrama de contexto de perfil-panel](docs/architecture/context.svg)
 
-[Versión interactiva](docs/architecture/context.html): descarga el archivo y ábrelo en un navegador.
+[Versión interactiva](https://tacuchi.github.io/perfil-panel/architecture/context.html).
 
 | Interfaz externa | Dirección | Cuándo ocurre |
 |---|---|---|
@@ -45,7 +45,7 @@ Qué no es:
 
 ![Diagrama de contenedores de perfil-panel](docs/architecture/containers.svg)
 
-[Versión interactiva](docs/architecture/containers.html): descarga el archivo y ábrelo en un navegador.
+[Versión interactiva](https://tacuchi.github.io/perfil-panel/architecture/containers.html).
 
 | Bloque | Responsabilidad | Código |
 |---|---|---|
