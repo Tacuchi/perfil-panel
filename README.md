@@ -47,4 +47,4 @@ Es un proyecto personal: no se aceptan contribuciones externas.
 
 ## Licencia
 
-Sin licencia de uso: todos los derechos reservados. El paquete está marcado como privado en `package.json` y no hay archivo de licencia.
+[MIT](LICENSE). El paquete está marcado como privado en `package.json`: no se publica en npm.
